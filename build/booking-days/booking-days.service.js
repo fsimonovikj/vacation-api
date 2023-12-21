@@ -111,14 +111,11 @@ var BookingDaysService = /** @class */ (function () {
             var booking;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        console.log(bookingId);
-                        return [4 /*yield*/, this.bookingRepository.findOneOrFail({
-                                where: { id: bookingId },
-                            })];
+                    case 0: return [4 /*yield*/, this.bookingRepository.findOneOrFail({
+                            where: { id: bookingId },
+                        })];
                     case 1:
                         booking = _a.sent();
-                        console.log("Booking", booking);
                         if (!booking) {
                             throw new Error("Item with this ID not found");
                         }
@@ -127,6 +124,32 @@ var BookingDaysService = /** @class */ (function () {
                         throw new Error("Booking request already approved or rejected, check status in database.");
                     case 2:
                         booking.status = booking_status_enum_1.BookingStatus.Approved;
+                        return [4 /*yield*/, this.bookingRepository.save(booking)];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/, booking];
+                }
+            });
+        });
+    };
+    BookingDaysService.prototype.rejectBookingRequest = function (bookingId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var booking;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.bookingRepository.findOneOrFail({
+                            where: { id: bookingId },
+                        })];
+                    case 1:
+                        booking = _a.sent();
+                        if (!booking) {
+                            throw new Error("Item with this ID not found");
+                        }
+                        if (!(booking.status === booking_status_enum_1.BookingStatus.Approved ||
+                            booking.status === booking_status_enum_1.BookingStatus.Rejected)) return [3 /*break*/, 2];
+                        throw new Error("Booking request already approved or rejected, check status in database.");
+                    case 2:
+                        booking.status = booking_status_enum_1.BookingStatus.Rejected;
                         return [4 /*yield*/, this.bookingRepository.save(booking)];
                     case 3:
                         _a.sent();

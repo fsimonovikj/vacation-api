@@ -69,6 +69,9 @@ var transporter = nodemailer.createTransport({
     auth: {
         user: "filip_simonovik@hotmail.com",
         pass: "zvezdajezivot",
+        // TODO: check this and revert to env variables
+        // user: process.env.EMAIL_USER,
+        // pass: process.env.EMAIL_PASSWORD,
     },
 });
 var PublicMethodsController = /** @class */ (function () {
@@ -138,8 +141,6 @@ var PublicMethodsController = /** @class */ (function () {
             var sendEmail, sendBookingRequestEmail;
             var _this = this;
             return __generator(this, function (_a) {
-                console.log("req.body: ", req.user);
-                console.log("req.body: ", req);
                 sendEmail = function () { return __awaiter(_this, void 0, void 0, function () {
                     var info, error_2;
                     return __generator(this, function (_a) {
@@ -153,7 +154,7 @@ var PublicMethodsController = /** @class */ (function () {
                                         from: "filip_simonovik@hotmail.com",
                                         to: "filip@mozok.de",
                                         subject: "Test Email",
-                                        html: "\n            <div style='text-align: center' >\n            <h1>Vacation Booking Request</h1>\n            <div style='text-align: center'>\n              <div style='padding: 20px'>\n                <div style='border: 2px solid grey'>\n                  <h3 style='padding: 10px'>".concat(req.firstName, " ").concat(req.lastName, "</h3>\n                </div>\n              </div>\n              <p>\n              With this request, I submit a request to use annual leave from ").concat(req.start, " to ").concat(req.end, "</p>\n              <p>Total days: ").concat(req.bookedDays, "</p>\n              <p>Description:</p>\n              <div style='border: 2px solid grey'>\n               <p style='padding: 2px'>").concat(req.title, "</p>\n              </div>\n            </div>\n            <div>\n            <p>Please review and approve or reject this booking request.</p>\n            <p>Click the following links to submit your response:</p>\n            <a href='http://localhost:3000/approve?bookingId=").concat(req.id, "'>Approve</a>\n            <a href=\"http://localhost:3000/reject?bookingId=").concat(req.id, "\">Reject</a>\n            </div>\n            </div>\n          "),
+                                        html: "\n            <div style='text-align: center' >\n            <h1>Vacation Booking Request</h1>\n            <div style='text-align: center'>\n              <div style='padding: 20px'>\n                <div style='border: 2px solid grey'>\n                  <h3 style='padding: 10px'>".concat(req.firstName, " ").concat(req.lastName, "</h3>\n                </div>\n              </div>\n              <p>\n              With this request, I submit a request to use annual leave from ").concat(req.start, " to ").concat(req.end, "</p>\n              <p>Total days: ").concat(req.bookedDays, "</p>\n              <p>Description:</p>\n              <div style='border: 2px solid grey'>\n               <p style='padding: 2px'>").concat(req.description, "</p>\n              </div>\n            </div>\n            <div>\n            <p>Please review and approve or reject this booking request.</p>\n            <p>Click the following links to submit your response:</p>\n            <a href='http://localhost:3000/approve?bookingId=").concat(req.id, "'>Approve</a>\n            <a href=\"http://localhost:3000/reject?bookingId=").concat(req.id, "\">Reject</a>\n            </div>\n            </div>\n          "),
                                         text: "Annual leave request.",
                                     })];
                             case 2:
@@ -171,9 +172,7 @@ var PublicMethodsController = /** @class */ (function () {
                 sendBookingRequestEmail = function (bookingDetails) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0:
-                                console.log(bookingDetails);
-                                return [4 /*yield*/, sendEmail()];
+                            case 0: return [4 /*yield*/, sendEmail()];
                             case 1:
                                 _a.sent();
                                 return [2 /*return*/];
@@ -195,16 +194,12 @@ var PublicMethodsController = /** @class */ (function () {
                         return [4 /*yield*/, this.bookingService.approveBookingRequest(bookingId)];
                     case 1:
                         booking = _a.sent();
-                        console.log("BOOKING", booking);
-                        console.log("before user");
-                        console.log("userId: ", booking.userId);
                         return [4 /*yield*/, this.userService.findUser(booking.userId)];
                     case 2:
                         user = _a.sent();
                         return [4 /*yield*/, this.vacationService.findVacationByDate(user.id, booking.start)];
                     case 3:
                         vacation = _a.sent();
-                        console.log("Vacation", vacation[0]);
                         return [4 /*yield*/, this.vacationService.update(vacation[0], {
                                 days: vacation[0].days - booking.bookedDays,
                             })];
@@ -219,9 +214,28 @@ var PublicMethodsController = /** @class */ (function () {
             });
         });
     };
+    PublicMethodsController.prototype.rejectVacationRequest = function (bookingId, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var booking, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.bookingService.rejectBookingRequest(bookingId)];
+                    case 1:
+                        booking = _a.sent();
+                        return [2 /*return*/, res.status(200).send(booking)];
+                    case 2:
+                        error_4 = _a.sent();
+                        return [2 /*return*/, res.status(500).send(error_4.message)];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     PublicMethodsController.prototype.createVacationSolution = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var vacationSolution, error_4;
+            var vacationSolution, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -231,8 +245,8 @@ var PublicMethodsController = /** @class */ (function () {
                         vacationSolution = _a.sent();
                         return [2 /*return*/, res.status(200).send(vacationSolution)];
                     case 2:
-                        error_4 = _a.sent();
-                        return [2 /*return*/, res.status(500).send(error_4.message)];
+                        error_5 = _a.sent();
+                        return [2 /*return*/, res.status(500).send(error_5.message)];
                     case 3: return [2 /*return*/];
                 }
             });
@@ -270,6 +284,14 @@ var PublicMethodsController = /** @class */ (function () {
         __metadata("design:paramtypes", [String, Object]),
         __metadata("design:returntype", Promise)
     ], PublicMethodsController.prototype, "approveVacationRequest", null);
+    __decorate([
+        (0, common_1.Get)("/reject"),
+        __param(0, (0, common_1.Query)("bookingId")),
+        __param(1, (0, common_1.Res)()),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, Object]),
+        __metadata("design:returntype", Promise)
+    ], PublicMethodsController.prototype, "rejectVacationRequest", null);
     __decorate([
         (0, common_1.Post)("/vacation-solution"),
         __param(0, (0, common_1.Body)()),

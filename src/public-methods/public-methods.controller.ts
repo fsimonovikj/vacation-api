@@ -19,8 +19,11 @@ const transporter = nodemailer.createTransport({
     ciphers: "SSLv3",
   },
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
+    user: "filip_simonovik@hotmail.com",
+    pass: "zvezdajezivot",
+    // TODO: check this and revert to env variables
+    // user: process.env.EMAIL_USER,
+    // pass: process.env.EMAIL_PASSWORD,
   },
 });
 
@@ -84,6 +87,7 @@ export class PublicMethodsController {
     req: {
       id: string;
       title: string;
+      description: string;
       start: Date;
       end: Date;
       allDay: boolean;
@@ -95,9 +99,6 @@ export class PublicMethodsController {
     },
     @Res() res: Response
   ) {
-    console.log(`req.body: `, req.user);
-    console.log(`req.body: `, req);
-
     const sendEmail = async () => {
       console.log("Sending email...");
       try {
@@ -120,7 +121,7 @@ export class PublicMethodsController {
               <p>Total days: ${req.bookedDays}</p>
               <p>Description:</p>
               <div style='border: 2px solid grey'>
-               <p style='padding: 2px'>${req.title}</p>
+               <p style='padding: 2px'>${req.description}</p>
               </div>
             </div>
             <div>
@@ -142,7 +143,6 @@ export class PublicMethodsController {
 
     // // Function to send the vacation booking request email
     const sendBookingRequestEmail = async (bookingDetails) => {
-      console.log(bookingDetails);
       await sendEmail();
       // Create a Nodemailer transporter with your email provider's configuration
     };
@@ -160,21 +160,29 @@ export class PublicMethodsController {
         bookingId
       );
 
-      console.log(`BOOKING`, booking);
-
-      console.log(`before user`);
-      console.log(`userId: `, booking.userId);
       const user = await this.userService.findUser(booking.userId);
       const vacation = await this.vacationService.findVacationByDate(
         user.id,
         booking.start
       );
 
-      console.log(`Vacation`, vacation[0]);
-
       await this.vacationService.update(vacation[0], {
         days: vacation[0].days - booking.bookedDays,
       });
+
+      return res.status(200).send(booking);
+    } catch (error) {
+      return res.status(500).send(error.message);
+    }
+  }
+
+  @Get("/reject")
+  async rejectVacationRequest(
+    @Query("bookingId") bookingId: string,
+    @Res() res: Response
+  ) {
+    try {
+      const booking = await this.bookingService.rejectBookingRequest(bookingId);
 
       return res.status(200).send(booking);
     } catch (error) {
