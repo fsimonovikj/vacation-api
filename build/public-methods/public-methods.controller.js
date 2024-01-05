@@ -58,22 +58,7 @@ var vacation_service_1 = require("../vacation/vacation.service");
 var user_service_1 = require("../users/user.service");
 var update_vacation_solution_dto_1 = require("../vacation-solution/dto/update-vacation-solution.dto");
 var vacation_solution_service_1 = require("../vacation-solution/entities/vacation-solution.service");
-var nodemailer = require("nodemailer");
-var transporter = nodemailer.createTransport({
-    host: "smtp-mail.outlook.com",
-    port: 587,
-    secure: false,
-    tls: {
-        ciphers: "SSLv3",
-    },
-    auth: {
-        user: "filip_simonovik@hotmail.com",
-        pass: "zvezdajezivot",
-        // TODO: check this and revert to env variables
-        // user: process.env.EMAIL_USER,
-        // pass: process.env.EMAIL_PASSWORD,
-    },
-});
+var utils_1 = require("../email/utils");
 var PublicMethodsController = /** @class */ (function () {
     function PublicMethodsController(publicMethodService, userService, bookingService, vacationService, vacationSolutionService) {
         this.publicMethodService = publicMethodService;
@@ -136,13 +121,13 @@ var PublicMethodsController = /** @class */ (function () {
             });
         });
     };
-    PublicMethodsController.prototype.createBookingRequest = function (req, res) {
+    PublicMethodsController.prototype.createBookingRequest = function (req) {
         return __awaiter(this, void 0, void 0, function () {
             var sendEmail, sendBookingRequestEmail;
             var _this = this;
             return __generator(this, function (_a) {
                 sendEmail = function () { return __awaiter(_this, void 0, void 0, function () {
-                    var info, error_2;
+                    var error_2;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
@@ -150,16 +135,19 @@ var PublicMethodsController = /** @class */ (function () {
                                 _a.label = 1;
                             case 1:
                                 _a.trys.push([1, 3, , 4]);
-                                return [4 /*yield*/, transporter.sendMail({
-                                        from: "filip_simonovik@hotmail.com",
-                                        to: "filip@mozok.de",
-                                        subject: "Test Email",
-                                        html: "\n            <div style='text-align: center' >\n            <h1>Vacation Booking Request</h1>\n            <div style='text-align: center'>\n              <div style='padding: 20px'>\n                <div style='border: 2px solid grey'>\n                  <h3 style='padding: 10px'>".concat(req.firstName, " ").concat(req.lastName, "</h3>\n                </div>\n              </div>\n              <p>\n              With this request, I submit a request to use annual leave from ").concat(req.start, " to ").concat(req.end, "</p>\n              <p>Total days: ").concat(req.bookedDays, "</p>\n              <p>Description:</p>\n              <div style='border: 2px solid grey'>\n               <p style='padding: 2px'>").concat(req.description, "</p>\n              </div>\n            </div>\n            <div>\n            <p>Please review and approve or reject this booking request.</p>\n            <p>Click the following links to submit your response:</p>\n            <a href='http://localhost:3000/approve?bookingId=").concat(req.id, "'>Approve</a>\n            <a href=\"http://localhost:3000/reject?bookingId=").concat(req.id, "\">Reject</a>\n            </div>\n            </div>\n          "),
-                                        text: "Annual leave request.",
+                                return [4 /*yield*/, (0, utils_1.bookEmail)({
+                                        subject: "Vacation Booking Request",
+                                        id: req.id,
+                                        firstName: req.firstName,
+                                        lastName: req.lastName,
+                                        bookedDays: req.bookedDays,
+                                        startAt: req.start,
+                                        endAt: req.end,
+                                        description: req.description,
                                     })];
                             case 2:
-                                info = _a.sent();
-                                console.log("Email sent:", info.messageId);
+                                _a.sent();
+                                console.log("Email sent successfully...");
                                 return [3 /*break*/, 4];
                             case 3:
                                 error_2 = _a.sent();
@@ -190,7 +178,7 @@ var PublicMethodsController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 6, , 7]);
                         return [4 /*yield*/, this.bookingService.approveBookingRequest(bookingId)];
                     case 1:
                         booking = _a.sent();
@@ -205,30 +193,47 @@ var PublicMethodsController = /** @class */ (function () {
                             })];
                     case 4:
                         _a.sent();
-                        return [2 /*return*/, res.status(200).send(booking)];
+                        return [4 /*yield*/, (0, utils_1.approveEmail)({
+                                reciever: user.email,
+                                message: "Your vacation request is approved",
+                            })];
                     case 5:
+                        _a.sent();
+                        // TODO: send successfully message to the user that the booking request is approved via email
+                        return [2 /*return*/, res.status(200).send(booking)];
+                    case 6:
                         error_3 = _a.sent();
                         return [2 /*return*/, res.status(500).send(error_3.message)];
-                    case 6: return [2 /*return*/];
+                    case 7: return [2 /*return*/];
                 }
             });
         });
     };
     PublicMethodsController.prototype.rejectVacationRequest = function (bookingId, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var booking, error_4;
+            var booking, user, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, this.bookingService.rejectBookingRequest(bookingId)];
                     case 1:
                         booking = _a.sent();
-                        return [2 /*return*/, res.status(200).send(booking)];
+                        return [4 /*yield*/, this.userService.findUser(booking.userId)];
                     case 2:
+                        user = _a.sent();
+                        return [4 /*yield*/, (0, utils_1.rejectEmail)({
+                                reciever: user.email,
+                                message: "Your vacation request is rejected",
+                            })];
+                    case 3:
+                        _a.sent();
+                        // TODO: send rejection message to the user that the booking request is rejected via email
+                        return [2 /*return*/, res.status(200).send(booking)];
+                    case 4:
                         error_4 = _a.sent();
                         return [2 /*return*/, res.status(500).send(error_4.message)];
-                    case 3: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
@@ -271,9 +276,8 @@ var PublicMethodsController = /** @class */ (function () {
     __decorate([
         (0, common_1.Post)("/booking-requests"),
         __param(0, (0, common_1.Body)()),
-        __param(1, (0, common_1.Res)()),
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:paramtypes", [Object]),
         __metadata("design:returntype", Promise)
     ], PublicMethodsController.prototype, "createBookingRequest", null);
     __decorate([

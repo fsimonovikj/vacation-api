@@ -39,6 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@nestjs/core");
 var app_module_1 = require("./app.module");
 var cookieParser = require("cookie-parser");
+var dotenv = require("dotenv");
 function bootstrap() {
     return __awaiter(this, void 0, void 0, function () {
         var app;
@@ -51,6 +52,7 @@ function bootstrap() {
                         credentials: true,
                     });
                     app.use(cookieParser());
+                    dotenv.config();
                     return [4 /*yield*/, app.listen(process.env.PORT || 3000)];
                 case 2:
                     _a.sent();
