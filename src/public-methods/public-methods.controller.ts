@@ -95,9 +95,6 @@ export class PublicMethodsController {
     },
     @Res() res: Response
   ) {
-    console.log(`req.body: `, req.user);
-    console.log(`req.body: `, req);
-
     const sendEmail = async () => {
       console.log("Sending email...");
       try {
@@ -160,17 +157,11 @@ export class PublicMethodsController {
         bookingId
       );
 
-      console.log(`BOOKING`, booking);
-
-      console.log(`before user`);
-      console.log(`userId: `, booking.userId);
       const user = await this.userService.findUser(booking.userId);
       const vacation = await this.vacationService.findVacationByDate(
         user.id,
         booking.start
       );
-
-      console.log(`Vacation`, vacation[0]);
 
       await this.vacationService.update(vacation[0], {
         days: vacation[0].days - booking.bookedDays,

@@ -5,4 +5,9 @@ import { HolidaysService } from "./holidays.service";
 @Controller("holidays")
 export class HolidaysController {
   constructor(private readonly holidayService: HolidaysService) {}
+
+  @Get()
+  async findAll() {
+    return this.holidayService.findAll();
+  }
 }

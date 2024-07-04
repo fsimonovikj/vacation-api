@@ -39,8 +39,6 @@ export class VacationController {
       });
     }
 
-    console.log(`DATA`, data);
-    console.log(`vacation`, vacations);
     return data;
   }
 

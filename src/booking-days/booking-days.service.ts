@@ -17,7 +17,7 @@ export class BookingDaysService {
       where: {
         status: Not(BookingStatus.Pending),
       },
-      order: { createdAt: "DESC" },
+      // order: { createdAt: "DESC" },
     });
   }
 
@@ -50,8 +50,6 @@ export class BookingDaysService {
     const booking = await this.bookingRepository.findOneOrFail({
       where: { id: bookingId },
     });
-
-    console.log(`Booking`, booking);
 
     if (!booking) {
       throw new Error("Item with this ID not found");

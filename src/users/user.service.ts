@@ -11,7 +11,9 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+    return this.userRepository.find({
+      order: { createdAt: "ASC" },
+    });
   }
 
   async findUserByEmail(email: string): Promise<User> {

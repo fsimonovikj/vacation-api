@@ -9,4 +9,8 @@ export class HolidaysService {
     @InjectRepository(Holiday)
     private readonly holidayRepository: Repository<Holiday>
   ) {}
+
+  async findAll(): Promise<Holiday[]> {
+    return this.holidayRepository.find();
+  }
 }
