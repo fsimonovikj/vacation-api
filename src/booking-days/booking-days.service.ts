@@ -46,7 +46,7 @@ export class BookingDaysService {
   }
 
   async approveBookingRequest(bookingId: string) {
-    console.log(bookingId);
+    // TODO: send meil to the user with the approved request
     const booking = await this.bookingRepository.findOneOrFail({
       where: { id: bookingId },
     });
@@ -64,6 +64,31 @@ export class BookingDaysService {
       );
     } else {
       booking.status = BookingStatus.Approved;
+      await this.bookingRepository.save(booking);
+
+      return booking;
+    }
+  }
+
+  async rejectBookingRequest(bookingId: string) {
+    // TODO: send meil to the user with the rejected request
+    const booking = await this.bookingRepository.findOneOrFail({
+      where: { id: bookingId },
+    });
+
+    if (!booking) {
+      throw new Error("Item with this ID not found");
+    }
+
+    if (
+      booking.status === BookingStatus.Approved ||
+      booking.status === BookingStatus.Rejected
+    ) {
+      throw new Error(
+        "Booking request already approved or rejected, check status in database."
+      );
+    } else {
+      booking.status = BookingStatus.Rejected;
       await this.bookingRepository.save(booking);
 
       return booking;

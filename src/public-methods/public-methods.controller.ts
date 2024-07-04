@@ -9,20 +9,8 @@ import { VacationService } from "../vacation/vacation.service";
 import { UserService } from "../users/user.service";
 import { CreateVacationSolutionDto } from "../vacation-solution/dto/update-vacation-solution.dto";
 import { VacationSolutionService } from "../vacation-solution/entities/vacation-solution.service";
-const nodemailer = require("nodemailer");
-
-const transporter = nodemailer.createTransport({
-  host: "smtp-mail.outlook.com", // hostname
-  port: 587, // port for secure SMTP
-  secure: false,
-  tls: {
-    ciphers: "SSLv3",
-  },
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+import { transporter } from "../email/configuration";
+import { approveEmail, bookEmail, rejectEmail } from "../email/utils";
 
 @Controller()
 export class PublicMethodsController {
@@ -84,6 +72,7 @@ export class PublicMethodsController {
     req: {
       id: string;
       title: string;
+      description: string;
       start: Date;
       end: Date;
       allDay: boolean;
@@ -92,46 +81,23 @@ export class PublicMethodsController {
       firstName: string;
       lastName: string;
       status: BookingStatus;
-    },
-    @Res() res: Response
+    }
   ) {
     const sendEmail = async () => {
       console.log("Sending email...");
       try {
-        // Send email
-        const info = await transporter.sendMail({
-          from: "filip_simonovik@hotmail.com",
-          to: "filip@mozok.de",
-          subject: "Test Email",
-          html: `
-            <div style='text-align: center' >
-            <h1>Vacation Booking Request</h1>
-            <div style='text-align: center'>
-              <div style='padding: 20px'>
-                <div style='border: 2px solid grey'>
-                  <h3 style='padding: 10px'>${req.firstName} ${req.lastName}</h3>
-                </div>
-              </div>
-              <p>
-              With this request, I submit a request to use annual leave from ${req.start} to ${req.end}</p>
-              <p>Total days: ${req.bookedDays}</p>
-              <p>Description:</p>
-              <div style='border: 2px solid grey'>
-               <p style='padding: 2px'>${req.title}</p>
-              </div>
-            </div>
-            <div>
-            <p>Please review and approve or reject this booking request.</p>
-            <p>Click the following links to submit your response:</p>
-            <a href='http://localhost:3000/approve?bookingId=${req.id}'>Approve</a>
-            <a href="http://localhost:3000/reject?bookingId=${req.id}">Reject</a>
-            </div>
-            </div>
-          `,
-          text: "Annual leave request.",
+        await bookEmail({
+          subject: "Vacation Booking Request",
+          id: req.id,
+          firstName: req.firstName,
+          lastName: req.lastName,
+          bookedDays: req.bookedDays,
+          startAt: req.start,
+          endAt: req.end,
+          description: req.description,
         });
 
-        console.log("Email sent:", info.messageId);
+        console.log(`Email sent successfully...`);
       } catch (error) {
         console.error("Error sending email:", error);
       }
@@ -139,7 +105,6 @@ export class PublicMethodsController {
 
     // // Function to send the vacation booking request email
     const sendBookingRequestEmail = async (bookingDetails) => {
-      console.log(bookingDetails);
       await sendEmail();
       // Create a Nodemailer transporter with your email provider's configuration
     };
@@ -166,6 +131,35 @@ export class PublicMethodsController {
       await this.vacationService.update(vacation[0], {
         days: vacation[0].days - booking.bookedDays,
       });
+
+      await approveEmail({
+        reciever: user.email,
+        message: `Your vacation request is approved`,
+      });
+
+      // TODO: send successfully message to the user that the booking request is approved via email
+
+      return res.status(200).send(booking);
+    } catch (error) {
+      return res.status(500).send(error.message);
+    }
+  }
+
+  @Get("/reject")
+  async rejectVacationRequest(
+    @Query("bookingId") bookingId: string,
+    @Res() res: Response
+  ) {
+    try {
+      const booking = await this.bookingService.rejectBookingRequest(bookingId);
+
+      const user = await this.userService.findUser(booking.userId);
+
+      await rejectEmail({
+        reciever: user.email,
+        message: `Your vacation request is rejected`,
+      });
+      // TODO: send rejection message to the user that the booking request is rejected via email
 
       return res.status(200).send(booking);
     } catch (error) {
