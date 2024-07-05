@@ -87,6 +87,7 @@ export class PublicMethodsController {
       console.log("Sending email...");
       try {
         await bookEmail({
+          email: req.user,
           subject: "Vacation Booking Request",
           id: req.id,
           firstName: req.firstName,

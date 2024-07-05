@@ -9,6 +9,7 @@ interface IEmail {
   startAt: Date;
   endAt: Date;
   description: string;
+  email: string;
 }
 
 interface IApproveEmail {
@@ -24,7 +25,7 @@ interface IRejectEmail {
 export const bookEmail = async (req: IEmail) => {
   await transporter.sendMail({
     from: senderEmail,
-    to: recieverEmail,
+    to: req.email,
     subject: req.subject,
     html: `
             <div style='text-align: center' >
@@ -58,7 +59,7 @@ export const bookEmail = async (req: IEmail) => {
 export const approveEmail = async (req: IApproveEmail) => {
   await transporter.sendMail({
     from: senderEmail,
-    to: recieverEmail,
+    to: req.reciever,
     subject: "Approved Vacation Booking Request",
     html: `
                 <div style='text-align: center' >
@@ -82,7 +83,7 @@ export const approveEmail = async (req: IApproveEmail) => {
 export const rejectEmail = async (req: IRejectEmail) => {
   await transporter.sendMail({
     from: senderEmail,
-    to: recieverEmail,
+    to: req.reciever,
     subject: "Rejected Vacation Booking Request",
     html: `
                 <div style='text-align: center' >
