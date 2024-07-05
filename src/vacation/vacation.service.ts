@@ -14,21 +14,21 @@ export class VacationService {
 
   async findAll(): Promise<VacationDay[]> {
     return this.vacationRepository.find({
-      order: { createdAt: "DESC" },
+      order: { createdAt: "ASC" },
     });
   }
 
   async findOne(userId: string): Promise<VacationDay> {
     return this.vacationRepository.findOne({
       where: { userId: userId },
-      order: { createdAt: "DESC" },
+      order: { createdAt: "ASC" },
     });
   }
 
   async findByUserId(id: string): Promise<VacationDay[]> {
     return this.vacationRepository.find({
       where: { userId: id },
-      order: { createdAt: "DESC" },
+      order: { createdAt: "ASC" },
     });
   }
 
