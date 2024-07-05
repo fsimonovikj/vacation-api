@@ -9,7 +9,6 @@ interface IEmail {
   startAt: Date;
   endAt: Date;
   description: string;
-  email: string;
 }
 
 interface IApproveEmail {
@@ -25,7 +24,7 @@ interface IRejectEmail {
 export const bookEmail = async (req: IEmail) => {
   await transporter.sendMail({
     from: senderEmail,
-    to: req.email,
+    to: recieverEmail,
     subject: req.subject,
     html: `
             <div style='text-align: center' >

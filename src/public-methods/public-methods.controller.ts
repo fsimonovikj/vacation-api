@@ -87,7 +87,6 @@ export class PublicMethodsController {
       console.log("Sending email...");
       try {
         await bookEmail({
-          email: req.user,
           subject: "Vacation Booking Request",
           id: req.id,
           firstName: req.firstName,
@@ -138,8 +137,6 @@ export class PublicMethodsController {
         message: `Your vacation request is approved`,
       });
 
-      // TODO: send successfully message to the user that the booking request is approved via email
-
       return res.status(200).send(booking);
     } catch (error) {
       return res.status(500).send(error.message);
@@ -160,7 +157,6 @@ export class PublicMethodsController {
         reciever: user.email,
         message: `Your vacation request is rejected`,
       });
-      // TODO: send rejection message to the user that the booking request is rejected via email
 
       return res.status(200).send(booking);
     } catch (error) {
