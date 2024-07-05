@@ -1,3 +1,5 @@
+import apiConfig from "../config/configurations";
+import configurations from "../config/configurations";
 import { recieverEmail, senderEmail, transporter } from "./configuration";
 
 interface IEmail {
@@ -46,8 +48,8 @@ export const bookEmail = async (req: IEmail) => {
             <div>
             <p>Please review and approve or reject this booking request.</p>
             <p>Click the following links to submit your response:</p>
-            <a href='http://localhost:3000/approve?bookingId=${req.id}'>Approve</a>
-            <a href="http://localhost:3000/reject?bookingId=${req.id}">Reject</a>
+            <a href='${apiConfig.apiBaseUrl}/approve?bookingId=${req.id}'>Approve</a>
+            <a href="${apiConfig.apiBaseUrl}/reject?bookingId=${req.id}">Reject</a>
             </div>
             </div>
           `,
