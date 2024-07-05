@@ -14,13 +14,7 @@ export abstract class BaseEntity {
   })
   createdAt: Date;
 
-  // @Column({
-  //   type: "timestamp",
-  //   nullable: true,
-  // })
-  // deletedAt: Date | null;
-
-  @DeleteDateColumn({
+  @Column({
     type: "timestamp",
     nullable: true,
   })
