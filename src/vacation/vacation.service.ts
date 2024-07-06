@@ -99,10 +99,20 @@ export class VacationService {
       .andWhere("vacation.id != :vacationId", { vacationId })
       .getOne();
 
+    let filteredVacation = [];
+
     if (vacation && vacation.startAt <= date && vacation.endAt >= date) {
-      return vacation;
+      filteredVacation.push(vacation);
     }
 
-    return null;
+    return filteredVacation;
+
+    // const filteredVacation = vacation.filter((vacation) => {
+    //   if (vacation.startAt <= date && vacation.endAt >= date) {
+    //     return vacation;
+    //   }
+    // });
+
+    // return filteredVacation;
   }
 }

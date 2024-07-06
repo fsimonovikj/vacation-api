@@ -132,13 +132,13 @@ export class PublicMethodsController {
         vacationId
       );
 
-      // await this.vacationService.update(vacation[0], {
-      //   days: vacation[0].days - booking.bookedDays,
-      // });
-
-      await this.vacationService.update(vacation, {
-        days: vacation.days - booking.bookedDays,
+      await this.vacationService.update(vacation[0], {
+        days: vacation[0].days - booking.bookedDays,
       });
+
+      // await this.vacationService.update(vacation, {
+      //   days: vacation.days - booking.bookedDays,
+      // });
 
       await approveEmail({
         reciever: user.email,
