@@ -87,11 +87,7 @@ export class VacationService {
     return filteredVacation;
   }
 
-  async findVacationByIdAndDate(
-    userId: string,
-    date: Date,
-    vacationId: string
-  ) {
+  async findVacationByIdAndDate(userId: string, date: Date) {
     const vacation = await this.vacationRepository
       .createQueryBuilder("vacation")
       .where("vacation.userId = :userId", { userId })
@@ -100,11 +96,7 @@ export class VacationService {
       .getMany();
 
     const filteredVacation = vacation.filter((vacation) => {
-      if (
-        vacation.startAt <= date &&
-        vacation.endAt >= date &&
-        vacation.id === vacationId
-      ) {
+      if (vacation.startAt <= date && vacation.endAt >= date) {
         return vacation;
       }
     });

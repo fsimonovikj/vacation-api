@@ -117,7 +117,7 @@ export class PublicMethodsController {
   @Get("/approve")
   async approveVacationRequest(
     @Query("bookingId") bookingId: string,
-    @Query("vacationId") vacationId: string,
+    // @Query("vacationId") vacationId: string,
     @Res() res: Response
   ) {
     try {
@@ -128,8 +128,7 @@ export class PublicMethodsController {
       const user = await this.userService.findUser(booking.userId);
       const vacation = await this.vacationService.findVacationByIdAndDate(
         user.id,
-        booking.start,
-        vacationId
+        booking.start
       );
 
       await this.vacationService.update(vacation[0], {
