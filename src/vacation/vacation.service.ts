@@ -14,20 +14,23 @@ export class VacationService {
 
   async findAll(): Promise<VacationDay[]> {
     return this.vacationRepository.find({
+      where: {
+        deletedAt: null,
+      },
       order: { createdAt: "ASC" },
     });
   }
 
   async findOne(userId: string): Promise<VacationDay> {
     return this.vacationRepository.findOne({
-      where: { userId: userId },
+      where: { userId: userId, deletedAt: null },
       order: { createdAt: "ASC" },
     });
   }
 
   async findByUserId(id: string): Promise<VacationDay[]> {
     return this.vacationRepository.find({
-      where: { userId: id },
+      where: { userId: id, deletedAt: null },
       order: { createdAt: "ASC" },
     });
   }
@@ -63,6 +66,7 @@ export class VacationService {
     const vacation = await this.vacationRepository.find({
       where: {
         userId,
+        deletedAt: null,
       },
     });
 

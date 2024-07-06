@@ -11,6 +11,10 @@ export class HolidaysService {
   ) {}
 
   async findAll(): Promise<Holiday[]> {
-    return this.holidayRepository.find();
+    return this.holidayRepository.find({
+      where: {
+        deletedAt: null,
+      },
+    });
   }
 }

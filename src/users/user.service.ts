@@ -12,6 +12,9 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find({
+      where: {
+        deletedAt: null,
+      },
       order: { createdAt: "ASC" },
     });
   }
@@ -20,6 +23,7 @@ export class UserService {
     return this.userRepository.findOne({
       where: {
         email: email,
+        deletedAt: null,
       },
     });
   }
@@ -28,6 +32,7 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: {
         id,
+        deletedAt: null,
       },
     });
 
@@ -38,6 +43,7 @@ export class UserService {
     return this.userRepository.findOne({
       where: {
         id: id,
+        deletedAt: null,
       },
     });
   }
