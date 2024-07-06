@@ -1,12 +1,4 @@
-import {
-  IsArray,
-  IsNotEmpty,
-  IsOptional,
-  MaxLength,
-  IsString,
-  IsBoolean,
-  IsDateString,
-} from "class-validator";
+import { IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateBookingDto {
   @IsNotEmpty()
@@ -32,4 +24,7 @@ export class CreateBookingDto {
 
   @IsNotEmpty()
   userId: string;
+
+  @IsNotEmpty()
+  vacationId: string;
 }

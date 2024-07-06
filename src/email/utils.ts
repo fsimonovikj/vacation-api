@@ -11,7 +11,6 @@ interface IEmail {
   startAt: Date;
   endAt: Date;
   description: string;
-  vacationId?: string;
 }
 
 interface IApproveEmail {
@@ -50,7 +49,7 @@ export const bookEmail = async (req: IEmail) => {
             <p>Please review and approve or reject this booking request.</p>
             <p>Click the following links to submit your response:</p>
             <a href='${apiConfig.apiBaseUrl}/approve?bookingId=${req.id}'>Approve</a>
-            <a href="${apiConfig.apiBaseUrl}/reject?bookingId=${req.id}&vacationId=${req.vacationId}">Reject</a>
+            <a href="${apiConfig.apiBaseUrl}/reject?bookingId=${req.id}">Reject</a>
             </div>
             </div>
           `,

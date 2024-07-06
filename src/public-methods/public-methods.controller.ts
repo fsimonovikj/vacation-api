@@ -96,7 +96,6 @@ export class PublicMethodsController {
           startAt: req.start,
           endAt: req.end,
           description: req.description,
-          // vacationId: req.vacationId,
         });
 
         console.log(`Email sent successfully...`);
@@ -117,7 +116,6 @@ export class PublicMethodsController {
   @Get("/approve")
   async approveVacationRequest(
     @Query("bookingId") bookingId: string,
-    // @Query("vacationId") vacationId: string,
     @Res() res: Response
   ) {
     try {

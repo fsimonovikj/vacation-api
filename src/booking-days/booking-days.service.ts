@@ -39,6 +39,7 @@ export class BookingDaysService {
       bookedDays: createBookingDto.bookedDays,
       status: createBookingDto.status,
       userId: createBookingDto.userId,
+      vacationId: createBookingDto.vacationId,
     });
 
     const savedVacation = await this.bookingRepository.save(vacation);
