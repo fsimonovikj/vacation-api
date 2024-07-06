@@ -28,13 +28,6 @@ export class VacationService {
     });
   }
 
-  // async findByUserId(id: string): Promise<VacationDay[]> {
-  //   return this.vacationRepository.find({
-  //     where: { userId: id, deletedAt: null },
-  //     order: { createdAt: "ASC" },
-  //   });
-  // }
-
   async findByUserId(id: string): Promise<VacationDay[]> {
     return await this.vacationRepository
       .createQueryBuilder("vacation")
