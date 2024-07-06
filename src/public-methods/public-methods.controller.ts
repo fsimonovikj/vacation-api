@@ -81,6 +81,7 @@ export class PublicMethodsController {
       firstName: string;
       lastName: string;
       status: BookingStatus;
+      vacationId: string;
     }
   ) {
     const sendEmail = async () => {
@@ -95,6 +96,7 @@ export class PublicMethodsController {
           startAt: req.start,
           endAt: req.end,
           description: req.description,
+          vacationId: req.vacationId,
         });
 
         console.log(`Email sent successfully...`);
@@ -115,6 +117,7 @@ export class PublicMethodsController {
   @Get("/approve")
   async approveVacationRequest(
     @Query("bookingId") bookingId: string,
+    @Query("vacationId") vacationId: string,
     @Res() res: Response
   ) {
     try {
@@ -125,7 +128,8 @@ export class PublicMethodsController {
       const user = await this.userService.findUser(booking.userId);
       const vacation = await this.vacationService.findVacationByDate(
         user.id,
-        booking.start
+        booking.start,
+        vacationId
       );
 
       await this.vacationService.update(vacation[0], {

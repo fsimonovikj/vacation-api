@@ -70,10 +70,11 @@ export class VacationService {
     return updatedVacation;
   }
 
-  async findVacationByDate(userId: string, date: Date) {
+  async findVacationByDate(userId: string, date: Date, vacationId: string) {
     const vacation = await this.vacationRepository
       .createQueryBuilder("vacation")
       .where("vacation.userId = :userId", { userId })
+      .andWhere("vacation.id = :vacationId", { vacationId })
       .andWhere("vacation.deletedAt IS NULL")
       .orderBy("vacation.createdAt", "ASC")
       .getMany();
