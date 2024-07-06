@@ -28,11 +28,20 @@ export class VacationService {
     });
   }
 
+  // async findByUserId(id: string): Promise<VacationDay[]> {
+  //   return this.vacationRepository.find({
+  //     where: { userId: id, deletedAt: null },
+  //     order: { createdAt: "ASC" },
+  //   });
+  // }
+
   async findByUserId(id: string): Promise<VacationDay[]> {
-    return this.vacationRepository.find({
-      where: { userId: id, deletedAt: null },
-      order: { createdAt: "ASC" },
-    });
+    return await this.vacationRepository
+      .createQueryBuilder("vacation")
+      .where("vacation.userId = :id", { id })
+      .andWhere("vacation.deletedAt IS NULL")
+      .orderBy("vacation.createdAt", "ASC")
+      .getMany();
   }
 
   async create(createVacationDto: CreateVacationDto) {
