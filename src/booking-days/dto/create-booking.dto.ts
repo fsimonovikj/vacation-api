@@ -24,7 +24,4 @@ export class CreateBookingDto {
 
   @IsNotEmpty()
   userId: string;
-
-  @IsNotEmpty()
-  vacationId: string;
 }

@@ -35,13 +35,6 @@ export class BookingDay extends BaseEntity {
   @Column({ type: "uuid", nullable: false })
   userId: string;
 
-  @ManyToOne(() => VacationDay, (vacation) => vacation.bookings)
-  @JoinColumn({ name: "vacationId" })
-  vacation: VacationDay;
-
-  @Column({ type: "uuid", nullable: false })
-  vacationId: string;
-
   getUserId(): string {
     return this.user.id;
   }

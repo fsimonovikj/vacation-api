@@ -1,7 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { BaseEntity } from "../../core/entities/base.entity";
 import { User } from "../../users/entities/user.entity";
-import { BookingDay } from "../../booking-days/entities/booking-day.entity";
 
 @Entity({ name: "vacation" })
 export class VacationDay extends BaseEntity {
@@ -28,9 +27,6 @@ export class VacationDay extends BaseEntity {
 
   @Column({ type: "uuid", nullable: false })
   userId: string;
-
-  @OneToMany(() => BookingDay, (booking) => booking.user)
-  bookings: BookingDay[];
 
   getUserId(): string {
     return this.user.id;
