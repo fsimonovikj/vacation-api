@@ -11,7 +11,7 @@ interface IEmail {
   startAt: Date;
   endAt: Date;
   description: string;
-  vacationId: string;
+  vacationId?: string;
 }
 
 interface IApproveEmail {

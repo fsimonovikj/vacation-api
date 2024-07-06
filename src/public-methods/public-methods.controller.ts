@@ -96,7 +96,7 @@ export class PublicMethodsController {
           startAt: req.start,
           endAt: req.end,
           description: req.description,
-          vacationId: req.vacationId,
+          // vacationId: req.vacationId,
         });
 
         console.log(`Email sent successfully...`);
