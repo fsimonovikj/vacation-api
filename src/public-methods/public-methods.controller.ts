@@ -126,13 +126,18 @@ export class PublicMethodsController {
       );
 
       const user = await this.userService.findUser(booking.userId);
-      const vacation = await this.vacationService.findVacationByDate(
+      const vacation = await this.vacationService.findVacationByIdAndDate(
         user.id,
-        booking.start
+        booking.start,
+        vacationId
       );
 
-      await this.vacationService.update(vacation[0], {
-        days: vacation[0].days - booking.bookedDays,
+      // await this.vacationService.update(vacation[0], {
+      //   days: vacation[0].days - booking.bookedDays,
+      // });
+
+      await this.vacationService.update(vacation, {
+        days: vacation.days - booking.bookedDays,
       });
 
       await approveEmail({

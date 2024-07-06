@@ -86,4 +86,23 @@ export class VacationService {
 
     return filteredVacation;
   }
+
+  async findVacationByIdAndDate(
+    userId: string,
+    date: Date,
+    vacationId: string
+  ) {
+    const vacation = await this.vacationRepository
+      .createQueryBuilder("vacation")
+      .where("vacation.userId = :userId", { userId })
+      .andWhere("vacation.deletedAt IS NULL")
+      .andWhere("vacation.id != :vacationId", { vacationId })
+      .getOne();
+
+    if (vacation && vacation.startAt <= date && vacation.endAt >= date) {
+      return vacation;
+    }
+
+    return null;
+  }
 }
