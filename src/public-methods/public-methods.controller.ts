@@ -136,10 +136,6 @@ export class PublicMethodsController {
         days: vacation[0].days - booking.bookedDays,
       });
 
-      // await this.vacationService.update(vacation, {
-      //   days: vacation.days - booking.bookedDays,
-      // });
-
       await approveEmail({
         reciever: user.email,
         message: `Your vacation request is approved`,

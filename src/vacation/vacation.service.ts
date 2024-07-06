@@ -96,23 +96,19 @@ export class VacationService {
       .createQueryBuilder("vacation")
       .where("vacation.userId = :userId", { userId })
       .andWhere("vacation.deletedAt IS NULL")
-      .andWhere("vacation.id != :vacationId", { vacationId })
-      .getOne();
+      .orderBy("vacation.createdAt", "ASC")
+      .getMany();
 
-    let filteredVacation = [];
-
-    if (vacation && vacation.startAt <= date && vacation.endAt >= date) {
-      filteredVacation.push(vacation);
-    }
+    const filteredVacation = vacation.filter((vacation) => {
+      if (
+        vacation.startAt <= date &&
+        vacation.endAt >= date &&
+        vacation.id === vacationId
+      ) {
+        return vacation;
+      }
+    });
 
     return filteredVacation;
-
-    // const filteredVacation = vacation.filter((vacation) => {
-    //   if (vacation.startAt <= date && vacation.endAt >= date) {
-    //     return vacation;
-    //   }
-    // });
-
-    // return filteredVacation;
   }
 }
