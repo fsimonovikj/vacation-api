@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional } from "class-validator";
+import { IsNotEmpty } from "class-validator";
 
 export class CreateVacationPlanDto {
   @IsNotEmpty()
@@ -7,9 +7,12 @@ export class CreateVacationPlanDto {
   @IsNotEmpty()
   title: string;
 
-  @IsOptional()
-  start: string;
+  @IsNotEmpty()
+  start: Date;
 
-  @IsOptional()
-  end: string;
+  @IsNotEmpty()
+  end: Date;
+
+  @IsNotEmpty()
+  days: Number;
 }

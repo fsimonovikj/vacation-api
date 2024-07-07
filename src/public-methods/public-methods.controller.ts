@@ -20,7 +20,7 @@ import {
   USER_NOT_FOUND,
 } from "../core/messages";
 import { getLocalizedMessage } from "../core/utils/utils";
-import { VacationPlanService } from "../vacation-plan/entities/vacation-plan.service";
+import { VacationPlanService } from "../vacation-plan/vacation-plan.service";
 
 @Controller()
 export class PublicMethodsController {

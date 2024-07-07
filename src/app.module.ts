@@ -8,6 +8,7 @@ import config from "./config/typeorm.config";
 import { BookingDaysModule } from "./booking-days/booking-days.module";
 import { HolidayModule } from "./holidays/holidays.module";
 import { VacationModule } from "./vacation/vacation.module";
+import { VacationPlanModule } from "./vacation-plan/vacation-plan.module";
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { VacationModule } from "./vacation/vacation.module";
     UserModule,
     BookingDaysModule,
     VacationModule,
+    VacationPlanModule,
     PublicMethodsModule,
     HolidayModule,
   ],

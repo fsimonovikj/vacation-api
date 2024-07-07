@@ -15,7 +15,7 @@ import { VacationModule } from "../vacation/vacation.module";
 import { VacationController } from "../vacation/vacation.controller";
 import { VacationService } from "../vacation/vacation.service";
 import { VacationPlan } from "../vacation-plan/entities/vacation-plan.entity";
-import { VacationPlanService } from "../vacation-plan/entities/vacation-plan.service";
+import { VacationPlanService } from "../vacation-plan/vacation-plan.service";
 
 @Module({
   imports: [
