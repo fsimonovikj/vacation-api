@@ -11,10 +11,9 @@ export class HolidaysService {
   ) {}
 
   async findAll(): Promise<Holiday[]> {
-    return this.holidayRepository.find({
-      where: {
-        deletedAt: null,
-      },
-    });
+    return this.holidayRepository
+      .createQueryBuilder("holiday")
+      .where("holiday.deletedAt IS NULL")
+      .getMany();
   }
 }
