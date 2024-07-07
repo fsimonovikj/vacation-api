@@ -1,7 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { BaseEntity } from "../../core/entities/base.entity";
 import { User } from "../../users/entities/user.entity";
-import { VacationDay } from "../../vacation/entities/vacation.entity";
 
 @Entity({ name: "booking-days" })
 export class BookingDay extends BaseEntity {
@@ -38,4 +37,7 @@ export class BookingDay extends BaseEntity {
   getUserId(): string {
     return this.user.id;
   }
+
+  @Column({ type: "uuid", nullable: true })
+  vacationId: string;
 }

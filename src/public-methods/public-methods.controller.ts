@@ -9,8 +9,16 @@ import { VacationService } from "../vacation/vacation.service";
 import { UserService } from "../users/user.service";
 import { CreateVacationSolutionDto } from "../vacation-solution/dto/update-vacation-solution.dto";
 import { VacationSolutionService } from "../vacation-solution/entities/vacation-solution.service";
-import { transporter } from "../email/configuration";
 import { approveEmail, bookEmail, rejectEmail } from "../email/utils";
+import {
+  APPROVED_RESPONSE_MESSAGE,
+  BOOK_VACATION_EMAIL_SUBJECT,
+  REJECTED_RESPONSE_MESSAGE,
+  UNAUTHORIZED,
+  USER_NOT_ACTIVE,
+  USER_NOT_EXIST,
+  USER_NOT_FOUND,
+} from "../core/messages";
 
 @Controller()
 export class PublicMethodsController {
@@ -28,7 +36,7 @@ export class PublicMethodsController {
       const user = await this.publicMethodService.login(email);
 
       if (!user) {
-        return res.status(401).end(`User not found`);
+        return res.status(401).end(getLocalizedMessage(USER_NOT_FOUND));
       }
 
       return user;
@@ -49,7 +57,7 @@ export class PublicMethodsController {
     const user = await this.publicMethodService.login(req.email);
 
     if (!user) {
-      return res.status(401).send("User is not exist");
+      return res.status(401).send(getLocalizedMessage(USER_NOT_EXIST));
     }
 
     if (user) {
@@ -58,10 +66,10 @@ export class PublicMethodsController {
         if (user.password === req.password) {
           return res.status(200).send({ user, token });
         } else {
-          return res.status(401).send("Unauthorized");
+          return res.status(401).send(getLocalizedMessage(UNAUTHORIZED));
         }
       } else {
-        return res.status(401).send("User is not activated");
+        return res.status(401).send(getLocalizedMessage(USER_NOT_ACTIVE));
       }
     }
   }
@@ -84,11 +92,17 @@ export class PublicMethodsController {
       vacationId: string;
     }
   ) {
+    const vacation = await this.vacationService.findOne(req.vacationId);
+
+    if (vacation.days < req.bookedDays) {
+      throw new Error("Not enough vacation days");
+    }
+
     const sendEmail = async () => {
       console.log("Sending email...");
       try {
         await bookEmail({
-          subject: "Vacation Booking Request",
+          subject: getLocalizedMessage(BOOK_VACATION_EMAIL_SUBJECT),
           id: req.id,
           firstName: req.firstName,
           lastName: req.lastName,
@@ -124,18 +138,19 @@ export class PublicMethodsController {
       );
 
       const user = await this.userService.findUser(booking.userId);
-      const vacation = await this.vacationService.findVacationByIdAndDate(
-        user.id,
-        booking.start
-      );
 
-      await this.vacationService.update(vacation[0], {
-        days: vacation[0].days - booking.bookedDays,
+      const vacation = await this.vacationService.findOne(booking.vacationId);
+
+      const remainingDays = vacation.days - booking.bookedDays;
+
+      await this.vacationService.update(vacation, {
+        days: remainingDays,
+        ...(remainingDays === 0 && { deletedAt: new Date() }),
       });
 
       await approveEmail({
         reciever: user.email,
-        message: `Your vacation request is approved`,
+        message: getLocalizedMessage(APPROVED_RESPONSE_MESSAGE),
       });
 
       return res.status(200).send(booking);
@@ -157,7 +172,7 @@ export class PublicMethodsController {
 
       await rejectEmail({
         reciever: user.email,
-        message: `Your vacation request is rejected`,
+        message: getLocalizedMessage(REJECTED_RESPONSE_MESSAGE),
       });
 
       return res.status(200).send(booking);

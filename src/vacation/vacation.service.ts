@@ -27,9 +27,9 @@ export class VacationService {
     });
   }
 
-  async findOne(userId: string): Promise<VacationDay> {
+  async findOne(id: string): Promise<VacationDay> {
     return this.vacationRepository.findOne({
-      where: { userId: userId, deletedAt: null },
+      where: { id, deletedAt: null },
       order: { createdAt: "ASC" },
     });
   }
