@@ -1,7 +1,8 @@
 const nodemailer = require("nodemailer");
 
 export const senderEmail = "booking-vacation@hotmail.com";
-export const recieverEmail = "filip@k.net.mk, simonovikj3005@gmail.com";
+// export const recieverEmail = "filip@k.net.mk, bosko@k.net.mk, oliver@k.net.mk";
+export const recieverEmail = "filip@k.net.mk";
 
 export const transporter = nodemailer.createTransport({
   host: "smtp-mail.outlook.com", // hostname

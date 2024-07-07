@@ -34,6 +34,46 @@ export const BOOK_VACATION_EMAIL_SUBJECT = {
 };
 
 export const BOOK_EXPLANATION_FIRST = {
-  en: "With this request, I submit a request to use annual leave from",
-  mk: "Поднесувам барање за користење на годишен одмор од",
+  en: `With this request, I submit a request to use annual leave from`,
+  mk: `Поднесувам барање за користење на годишен одмор во период од`,
+};
+
+export const BOOK_VACATION_DAYS = {
+  en: "Total days",
+  mk: "Вкупно денови",
+};
+
+export const DESCRIPTION = {
+  en: "Description",
+  mk: "Објаснување",
+};
+
+export const BOOK_EXPLANATION_SECOND = {
+  en: "Please review and approve or reject this booking request.",
+  mk: "Ве молам разгледајте го ова барање за резервација.",
+};
+
+export const BOOK_EXPLANATION_BUTTON = {
+  en: "Click the following links to submit your response:",
+  mk: "Кликнете на следните линкови за да го поднесете вашиот одговор:",
+};
+
+export const BOOK_APPROVE_BUTTON = {
+  en: "Approve",
+  mk: "Одобри",
+};
+
+export const BOOK_REJECT_BUTTON = {
+  en: "Reject",
+  mk: "Одбиј",
+};
+
+export const APPROVED_VACATION = {
+  en: "Approved Vacation Booking Request",
+  mk: "Одобрено барање за одмор",
+};
+
+export const REJECTED_VACATION = {
+  en: "Rejected Vacation Booking Request",
+  mk: "Одбиено барање за одмор",
 };

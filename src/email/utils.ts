@@ -1,9 +1,18 @@
 import apiConfig from "../config/configurations";
 import configurations from "../config/configurations";
 import {
+  APPROVED_VACATION,
+  BOOK_APPROVE_BUTTON,
+  BOOK_EXPLANATION_BUTTON,
   BOOK_EXPLANATION_FIRST,
+  BOOK_EXPLANATION_SECOND,
+  BOOK_REJECT_BUTTON,
+  BOOK_VACATION_DAYS,
   BOOK_VACATION_EMAIL_SUBJECT,
+  DESCRIPTION,
+  REJECTED_VACATION,
 } from "../core/messages";
+import { getLocalizedMessage } from "../core/utils/utils";
 import { recieverEmail, senderEmail, transporter } from "./configuration";
 
 interface IEmail {
@@ -47,21 +56,23 @@ export const bookEmail = async (req: IEmail) => {
               ${getLocalizedMessage(BOOK_EXPLANATION_FIRST)} ${req.startAt} - ${
       req.endAt
     }</p>
-              <p>Total days: ${req.bookedDays}</p>
-              <p>Description:</p>
+              <p>${getLocalizedMessage(BOOK_VACATION_DAYS)}: ${
+      req.bookedDays
+    }</p>
+              <p>${getLocalizedMessage(DESCRIPTION)}:</p>
               <div style='border: 2px solid grey'>
                <p style='padding: 2px'>${req.description}</p>
               </div>
             </div>
             <div>
-            <p>Please review and approve or reject this booking request.</p>
-            <p>Click the following links to submit your response:</p>
+            <p>${getLocalizedMessage(BOOK_EXPLANATION_SECOND)}</p>
+            <p>${getLocalizedMessage(BOOK_EXPLANATION_BUTTON)}</p>
             <a href='${apiConfig.apiBaseUrl}/approve?bookingId=${
       req.id
-    }'>Approve</a>
+    }'>${getLocalizedMessage(BOOK_APPROVE_BUTTON)}</a>
             <a href="${apiConfig.apiBaseUrl}/reject?bookingId=${
       req.id
-    }">Reject</a>
+    }">${getLocalizedMessage(BOOK_REJECT_BUTTON)}</a>
             </div>
             </div>
           `,
@@ -73,10 +84,10 @@ export const approveEmail = async (req: IApproveEmail) => {
   await transporter.sendMail({
     from: senderEmail,
     to: req.reciever,
-    subject: "Approved Vacation Booking Request",
+    subject: getLocalizedMessage(APPROVED_VACATION),
     html: `
                 <div style='text-align: center' >
-                <h1>Vacation Booking Request</h1>
+                <h1>${getLocalizedMessage(APPROVED_VACATION)}</h1>
                 <div style='text-align: center'>
                 <div style='padding: 20px'>
                     <div style='border: 2px solid grey'>
@@ -97,10 +108,10 @@ export const rejectEmail = async (req: IRejectEmail) => {
   await transporter.sendMail({
     from: senderEmail,
     to: req.reciever,
-    subject: "Rejected Vacation Booking Request",
+    subject: getLocalizedMessage(REJECTED_VACATION),
     html: `
                 <div style='text-align: center' >
-                <h1>Vacation Booking Request</h1>
+                <h1>${getLocalizedMessage(REJECTED_VACATION)}</h1>
                 <div style='text-align: center'>
                 <div style='padding: 20px'>
                     <div style='border: 2px solid grey'>

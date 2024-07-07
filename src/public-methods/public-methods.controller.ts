@@ -19,6 +19,7 @@ import {
   USER_NOT_EXIST,
   USER_NOT_FOUND,
 } from "../core/messages";
+import { getLocalizedMessage } from "../core/utils/utils";
 
 @Controller()
 export class PublicMethodsController {
