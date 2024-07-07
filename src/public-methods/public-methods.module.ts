@@ -14,8 +14,8 @@ import { VacationDay } from "../vacation/entities/vacation.entity";
 import { VacationModule } from "../vacation/vacation.module";
 import { VacationController } from "../vacation/vacation.controller";
 import { VacationService } from "../vacation/vacation.service";
-import { VacationSolutionService } from "../vacation-solution/entities/vacation-solution.service";
-import { VacationSolution } from "../vacation-solution/entities/vacation-solution.entity";
+import { VacationPlan } from "../vacation-plan/entities/vacation-plan.entity";
+import { VacationPlanService } from "../vacation-plan/entities/vacation-plan.service";
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { VacationSolution } from "../vacation-solution/entities/vacation-solutio
     forwardRef(() => BookingDaysModule),
     TypeOrmModule.forFeature([VacationDay]),
     forwardRef(() => VacationModule),
-    TypeOrmModule.forFeature([VacationSolution]),
+    TypeOrmModule.forFeature([VacationPlan]),
   ],
   controllers: [
     PublicMethodsController,
@@ -38,7 +38,7 @@ import { VacationSolution } from "../vacation-solution/entities/vacation-solutio
     UserService,
     BookingDaysService,
     VacationService,
-    VacationSolutionService,
+    VacationPlanService,
   ],
   exports: [PublicMethodsService],
 })

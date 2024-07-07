@@ -7,8 +7,8 @@ import { BookingDaysService } from "../booking-days/booking-days.service";
 import { BookingStatus } from "../booking-days/entities/booking-status.enum";
 import { VacationService } from "../vacation/vacation.service";
 import { UserService } from "../users/user.service";
-import { CreateVacationSolutionDto } from "../vacation-solution/dto/update-vacation-solution.dto";
-import { VacationSolutionService } from "../vacation-solution/entities/vacation-solution.service";
+import { CreateVacationPlanDto } from "../vacation-plan/dto/update-vacation-plan.dto";
+
 import { approveEmail, bookEmail, rejectEmail } from "../email/utils";
 import {
   APPROVED_RESPONSE_MESSAGE,
@@ -20,6 +20,7 @@ import {
   USER_NOT_FOUND,
 } from "../core/messages";
 import { getLocalizedMessage } from "../core/utils/utils";
+import { VacationPlanService } from "../vacation-plan/entities/vacation-plan.service";
 
 @Controller()
 export class PublicMethodsController {
@@ -28,7 +29,7 @@ export class PublicMethodsController {
     private readonly userService: UserService,
     private readonly bookingService: BookingDaysService,
     private readonly vacationService: VacationService,
-    private readonly vacationSolutionService: VacationSolutionService
+    private readonly vacationPlanService: VacationPlanService
   ) {}
 
   @Get("/login/:email")
@@ -182,15 +183,15 @@ export class PublicMethodsController {
     }
   }
 
-  @Post("/vacation-solution")
-  async createVacationSolution(
-    @Body() req: CreateVacationSolutionDto,
+  @Post("/vacation-plan")
+  async createVacationPlan(
+    @Body() req: CreateVacationPlanDto,
     @Res() res: Response
   ) {
     try {
-      const vacationSolution = await this.vacationSolutionService.create(req);
+      const plan = await this.vacationPlanService.create(req);
 
-      return res.status(200).send(vacationSolution);
+      return res.status(200).send(plan);
     } catch (error) {
       return res.status(500).send(error.message);
     }

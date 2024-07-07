@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional } from "class-validator";
 
-export class CreateVacationSolutionDto {
+export class CreateVacationPlanDto {
   @IsNotEmpty()
   id: string;
 
