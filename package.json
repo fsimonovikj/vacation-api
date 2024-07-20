@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "ts-node src/main.ts",
-    "production": "ts-node src/main.ts",
+    "production": "cross-env VACATION_ENVIRONMENT=production nest start",
     "dev": "npm run start:dev",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -59,7 +59,8 @@
     "rxjs": "^7.2.0",
     "typeorm": "^0.3.14",
     "typeorm-cli": "^1.0.7",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "cross-env": "^7.0.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

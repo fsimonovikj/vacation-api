@@ -3,7 +3,7 @@ interface AdminWebConfig {
   webBaseUrl: string;
 }
 
-let env: any = process.env.VACATION_ENV ?? "local";
+let env: any = process.env.VACATION_ENVIRONMENT ?? "local";
 
 let apiConfig: AdminWebConfig;
 
@@ -28,8 +28,8 @@ switch (env) {
     break;
   case "production":
     apiConfig = {
-      apiBaseUrl: "http://10.1.1.43:3000",
-      webBaseUrl: "http://10.1.1.43:4000",
+      apiBaseUrl: "http://api.odmor.k.net.mk:3000",
+      webBaseUrl: "http://odmor.k.net.mk:4000",
     };
     break;
   default:
