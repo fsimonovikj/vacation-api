@@ -3,10 +3,10 @@ import { join } from "path";
 
 const config: TypeOrmModuleOptions = {
   type: "mysql",
-  host: "80.77.157.1",
+  host: "bms.midel.mk",
   port: 3306,
-  username: "dare",
-  password: `NemaVrska123`,
+  username: "bosko",
+  password: `boskoz00`,
   database: "leaves",
   entities: [join(__dirname, "/../**/**.entity{.ts,.js}")],
   synchronize: true,
