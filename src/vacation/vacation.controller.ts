@@ -1,11 +1,22 @@
-import { Body, Controller, Get, Param, Post, Query, Res } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Res,
+  UseGuards,
+} from "@nestjs/common";
 import { BookingDaysService } from "../booking-days/booking-days.service";
 import { VacationDay } from "./entities/vacation.entity";
 import { BookingDay } from "../booking-days/entities/booking-day.entity";
 import { CreateVacationDto } from "./dto/create-vacation.dto";
 import { VacationService } from "./vacation.service";
 import { UserService } from "../users/user.service";
+import { AuthGuard } from "../auth/auth-guard";
 
+@UseGuards(AuthGuard)
 @Controller("vacation")
 export class VacationController {
   constructor(

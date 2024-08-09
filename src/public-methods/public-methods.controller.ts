@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Query, Res } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Res,
+  UseGuards,
+} from "@nestjs/common";
 import { PublicMethodsService } from "./public-methods.service";
 import { UserStatus } from "../core/enums/user-status.enum";
 import { Response } from "express";
@@ -21,6 +30,7 @@ import {
 } from "../core/messages";
 import { getLocalizedMessage } from "../core/utils/utils";
 import { VacationPlanService } from "../vacation-plan/vacation-plan.service";
+import { AuthGuard } from "../auth/auth-guard";
 
 @Controller()
 export class PublicMethodsController {
@@ -76,6 +86,7 @@ export class PublicMethodsController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post("/booking-requests")
   async createBookingRequest(
     @Body()
@@ -183,6 +194,7 @@ export class PublicMethodsController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post("/vacation-plan")
   async createVacationPlan(
     @Body() req: CreateVacationPlanDto,
