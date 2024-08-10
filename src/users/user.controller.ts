@@ -22,6 +22,13 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get(":companyId")
+  async findUsersByCompanyId(
+    @Param("companyId") companyId: string
+  ): Promise<User[]> {
+    return this.userService.findUsersByCompanyId(companyId);
+  }
+
   @Get(":id")
   async findUser(@Param("id") id: string) {
     return this.userService.findUserById(id);

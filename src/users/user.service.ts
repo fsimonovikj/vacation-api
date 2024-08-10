@@ -60,4 +60,14 @@ export class UserService {
   async remove(id: number): Promise<void> {
     await this.userRepository.delete(id);
   }
+
+  async findUsersByCompanyId(companyId: string): Promise<User[]> {
+    return this.userRepository.find({
+      where: {
+        // TODO: added companyId in the user entity, and filter by companyId
+        // companyId: companyId,
+        deletedAt: null,
+      },
+    });
+  }
 }
