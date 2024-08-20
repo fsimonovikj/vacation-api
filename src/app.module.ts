@@ -9,9 +9,11 @@ import { BookingDaysModule } from "./booking-days/booking-days.module";
 import { HolidayModule } from "./holidays/holidays.module";
 import { VacationModule } from "./vacation/vacation.module";
 import { VacationPlanModule } from "./vacation-plan/vacation-plan.module";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: ".env" }),
     TypeOrmModule.forRoot(config),
     UserModule,
     BookingDaysModule,

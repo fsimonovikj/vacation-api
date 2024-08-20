@@ -7,6 +7,7 @@ interface AdminWebConfig {
     port: number;
     username: string;
     password: string;
+    name: string;
   };
 }
 
@@ -21,36 +22,39 @@ switch (env) {
       webBaseUrl: "http://localhost:4000",
       database: {
         type: "mysql",
-        host: "localhost",
+        host: process.env.DATABASE_HOST_LOCAL,
         port: 3306,
-        username: null,
-        password: null,
+        username: process.env.DATABASE_USER_LOCAL,
+        password: process.env.DATABASE_PASSWORD_LOCAL,
+        name: process.env.DATABASE_NAME_LOCAL,
       },
     };
     break;
   case "development":
     apiConfig = {
       apiBaseUrl: "http://localhost:3000",
-      webBaseUrl: "http://localhost:3001",
+      webBaseUrl: "http://localhost:4000",
       database: {
         type: "mysql",
-        host: "localhost",
+        host: process.env.DATABASE_HOST_LOCAL,
         port: 3306,
-        username: null,
-        password: null,
+        username: process.env.DATABASE_USER_LOCAL,
+        password: process.env.DATABASE_PASSWORD_LOCAL,
+        name: process.env.DATABASE_NAME_LOCAL,
       },
     };
     break;
   case "staging":
     apiConfig = {
       apiBaseUrl: "http://localhost:3000",
-      webBaseUrl: "http://localhost:3001",
+      webBaseUrl: "http://localhost:4000",
       database: {
         type: "mysql",
-        host: "localhost",
+        host: process.env.DATABASE_HOST_LOCAL,
         port: 3306,
-        username: null,
-        password: null,
+        username: process.env.DATABASE_USER_LOCAL,
+        password: process.env.DATABASE_PASSWORD_LOCAL,
+        name: process.env.DATABASE_NAME_LOCAL,
       },
     };
     break;
@@ -64,6 +68,7 @@ switch (env) {
         port: 3306,
         username: process.env.DATABASE_USER_PROD,
         password: process.env.DATABASE_PASSWORD_PROD,
+        name: process.env.DATABASE_NAME_PROD,
       },
     };
     break;
@@ -77,6 +82,7 @@ switch (env) {
         port: 3306,
         username: process.env.DATABASE_USER_KNET,
         password: process.env.DATABASE_PASSWORD_KNET,
+        name: process.env.DATABASE_NAME_KNET,
       },
     };
     break;
@@ -84,7 +90,7 @@ switch (env) {
   default:
     apiConfig = {
       apiBaseUrl: "http://localhost:3000",
-      webBaseUrl: "http://localhost:3001",
+      webBaseUrl: "http://localhost:4000",
     };
 }
 
