@@ -2,20 +2,20 @@ import { IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateVacationDto {
   @IsNotEmpty()
-  id: string;
-
-  @IsNotEmpty()
   title: string;
 
   @IsNotEmpty()
   days: number;
 
   @IsOptional()
-  startAt: string;
+  startAt: Date;
 
   @IsOptional()
-  endAt: string;
+  endAt: Date;
 
   @IsNotEmpty()
   userId: string;
+
+  @IsOptional()
+  planId: any;
 }

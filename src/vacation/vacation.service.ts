@@ -4,7 +4,7 @@ import { Not, Repository } from "typeorm";
 import { VacationDay } from "./entities/vacation.entity";
 import { CreateVacationDto } from "./dto/create-vacation.dto";
 import { UpdateVacationDto } from "./dto/update-vacation.dto";
-
+import { v4 as uuidV4 } from "uuid";
 @Injectable()
 export class VacationService {
   constructor(
@@ -45,12 +45,13 @@ export class VacationService {
 
   async create(createVacationDto: CreateVacationDto) {
     const vacation = await this.vacationRepository.create({
-      id: createVacationDto.id,
+      id: uuidV4(),
       title: createVacationDto.title,
       days: createVacationDto.days,
       startAt: createVacationDto.startAt,
       endAt: createVacationDto.endAt,
       userId: createVacationDto.userId,
+      planId: createVacationDto.planId,
     });
 
     const savedVacation = await this.vacationRepository.save(vacation);

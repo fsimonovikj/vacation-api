@@ -19,7 +19,7 @@ export class VacationPlan extends BaseEntity {
   end: Date;
 
   @Column({ type: "int", nullable: false })
-  days: Number;
+  days: number;
 
   @OneToMany(() => VacationDay, (vacation) => vacation.plan)
   vacations: VacationDay[];

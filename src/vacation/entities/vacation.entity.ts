@@ -13,7 +13,7 @@ export class VacationDay extends BaseEntity {
   @Column({ type: "varchar", nullable: false })
   title: string;
 
-  @Column({ type: "numeric", nullable: false })
+  @Column({ type: "int", nullable: false })
   days: number;
 
   @Column({ type: "date", nullable: true })
@@ -29,8 +29,10 @@ export class VacationDay extends BaseEntity {
   @Column({ type: "uuid", nullable: false })
   userId: string;
 
+  @Column({ type: "uuid", nullable: true })
+  planId: string;
+
   @ManyToOne(() => VacationPlan, (plan) => plan.vacations)
-  @JoinColumn({ name: "planId" })
   plan: VacationPlan;
 
   getUserId(): string {

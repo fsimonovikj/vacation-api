@@ -14,5 +14,5 @@ export class CreateVacationPlanDto {
   end: Date;
 
   @IsNotEmpty()
-  days: Number;
+  days: number;
 }

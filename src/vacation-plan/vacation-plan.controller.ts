@@ -4,7 +4,7 @@ import { VacationPlan } from "./entities/vacation-plan.entity";
 import { CreateVacationPlanDto } from "./dto/update-vacation-plan.dto";
 import { AuthGuard } from "../auth/auth-guard";
 
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 @Controller("vacation-plan")
 export class VacationPlanController {
   constructor(private readonly vacationPlanService: VacationPlanService) {}
@@ -12,6 +12,11 @@ export class VacationPlanController {
   @Get("lists")
   async findAll(): Promise<VacationPlan[]> {
     return this.vacationPlanService.findAll();
+  }
+
+  @Get("details")
+  async findVacationPlanWithUserDetails(): Promise<any[]> {
+    return this.vacationPlanService.findVacationPlanWithUserDetails();
   }
 
   @Post()
