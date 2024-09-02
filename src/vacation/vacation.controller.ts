@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   Res,
   UseGuards,
@@ -61,5 +62,10 @@ export class VacationController {
   @Post()
   async create(@Body() createVacationDto: CreateVacationDto) {
     return this.vacationService.create(createVacationDto);
+  }
+
+  @Put("update")
+  async updateDays(@Body() vacation: any) {
+    return this.vacationService.updateByManagement(vacation);
   }
 }

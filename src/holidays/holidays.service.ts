@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Holiday } from "./entities/holiday.entity";
+import { CreateHolidayDto } from "./dto/create-holiday.dto";
+import { v4 as uuidV4 } from "uuid";
 
 @Injectable()
 export class HolidaysService {
@@ -15,5 +17,13 @@ export class HolidaysService {
       .createQueryBuilder("holiday")
       .where("holiday.deletedAt IS NULL")
       .getMany();
+  }
+
+  async create(holiday: CreateHolidayDto): Promise<Holiday> {
+    const newHoliday = this.holidayRepository.create({
+      id: uuidV4(),
+      ...holiday,
+    });
+    return this.holidayRepository.save(newHoliday);
   }
 }

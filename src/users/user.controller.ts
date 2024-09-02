@@ -41,9 +41,14 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Put(":id")
-  async update(@Param("id") id: number, @Body() user: User): Promise<User> {
-    return this.userService.update(id, user);
+  @Put()
+  async update(@Body() user: User): Promise<User> {
+    return this.userService.update(user);
+  }
+
+  @Put("deactivate")
+  async deactivate(@Body() user: User): Promise<User> {
+    return this.userService.deactivate(user);
   }
 
   @UseGuards(AuthGuard)

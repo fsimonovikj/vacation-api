@@ -10,6 +10,7 @@ import { UserStatus } from "../../core/enums/user-status.enum";
 import { UserRole } from "../../core/enums/user-role.enum";
 import { BookingDay } from "../../booking-days/entities/booking-day.entity";
 import { BaseEntity } from "../../core/entities/base.entity";
+import { UserDepartment } from "../../core/enums/user-department";
 
 @Entity({ name: "users" })
 export class User extends BaseEntity {
@@ -35,8 +36,8 @@ export class User extends BaseEntity {
   @Column({ type: "varchar", length: 20, nullable: true })
   password: string;
 
-  @Column({ type: "varchar", nullable: false })
-  department: string;
+  @Column({ type: "enum", enum: UserDepartment, default: UserDepartment.Other })
+  department: UserDepartment;
 
   @Column({
     type: "enum",

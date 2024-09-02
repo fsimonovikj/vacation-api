@@ -71,6 +71,23 @@ export class VacationService {
     return updatedVacation;
   }
 
+  async updateByManagement(req: any) {
+    const vacation = await this.vacationRepository.findOne({
+      where: { id: req.vacationId, deletedAt: null },
+    });
+
+    if (!vacation) {
+      throw new Error("Item with this ID not found");
+    }
+
+    const updatedVacation = await this.vacationRepository.save({
+      ...vacation,
+      days: req.remainingDays,
+    });
+
+    return updatedVacation;
+  }
+
   async findVacationByDate(userId: string, date: Date) {
     const vacation = await this.vacationRepository
       .createQueryBuilder("vacation")

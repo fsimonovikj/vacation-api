@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./entities/user.entity";
 import { Repository } from "typeorm";
+import { UserStatus } from "../core/enums/user-status.enum";
 
 @Injectable()
 export class UserService {
@@ -52,22 +53,52 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async update(id: any, user: User): Promise<User> {
-    await this.userRepository.update(id, user);
-    return this.userRepository.findOne(id);
+  async update(user: User): Promise<User> {
+    await this.userRepository.update(user.id, user);
+    return this.userRepository.findOne({
+      where: {
+        id: user.id,
+        deletedAt: null,
+      },
+    });
+  }
+
+  async deactivate(user: User): Promise<User> {
+    const [username, domain] = user.email.split("@");
+
+    const timestamp = new Date().getTime();
+    const newEmail = `${username}-${timestamp}@${domain}`;
+    await this.userRepository.update(user.id, {
+      ...user,
+      deletedAt: new Date(),
+      firstName: `${user.firstName}-${new Date().getTime()}`,
+      lastName: `${user.lastName}-${new Date().getTime()}`,
+      email: newEmail,
+      password: null,
+      status: UserStatus.Deactivated,
+    });
+    return this.userRepository.findOne({
+      where: {
+        id: user.id,
+      },
+    });
   }
 
   async remove(id: number): Promise<void> {
     await this.userRepository.delete(id);
   }
 
-  async findUsersByCompanyId(companyId: string): Promise<User[]> {
-    return this.userRepository.find({
-      where: {
-        // TODO: added companyId in the user entity, and filter by companyId
-        // companyId: companyId,
-        deletedAt: null,
-      },
-    });
+  async findUsersByCompanyId(companyId?: string): Promise<User[]> {
+    return await this.userRepository
+      .createQueryBuilder("users")
+      // .where("users.companyId = :companyId", { companyId })
+      .andWhere("users.deletedAt IS NULL OR users.deletedAt = :blank", {
+        blank: "0000-00-00 00:00:00",
+      })
+      .andWhere("users.status IN (:...statuses)", {
+        statuses: ["active", "pending"],
+      })
+      .orderBy("users.createdAt", "ASC")
+      .getMany();
   }
 }

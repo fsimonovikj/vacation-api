@@ -33,7 +33,7 @@ export class VacationPlanService {
 
     const detailedPlans = await Promise.all(
       vacationPlans.map(async (plan) => {
-        const users = await this.userService.findAll();
+        const users = await this.userService.findUsersByCompanyId();
         const details = await Promise.all(
           users.map(async (user) => {
             const userVacations = await this.vacationService.findByUserId(
@@ -42,9 +42,14 @@ export class VacationPlanService {
             const planVacation = userVacations.find(
               (v) => v.planId === plan.id
             );
+
+            console.log(`VACATION`, planVacation);
+            console.log(`USER VACATIONS`, userVacations);
             return {
               id: user.id,
-              name: `${user.firstName} ${user.lastName}`,
+              vacationId: planVacation ? planVacation.id : null,
+              firstName: user.firstName,
+              lastName: user.lastName,
               remainingDays: planVacation ? planVacation.days : 0,
             };
           })
@@ -86,7 +91,7 @@ export class VacationPlanService {
 
     const savedVacationPlan = await this.vacationPlanRepository.save(plan);
 
-    const activeUsers = await this.userService.findAll();
+    const activeUsers = await this.userService.findUsersByCompanyId();
 
     for (const user of activeUsers) {
       const existingVacations = await this.vacationService.findByUserId(
