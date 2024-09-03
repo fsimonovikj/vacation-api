@@ -15,7 +15,7 @@ export class BookingDaysService {
   async findAll(): Promise<BookingDay[]> {
     return this.bookingRepository.find({
       where: {
-        status: Not(BookingStatus.Pending),
+        // status: Not(BookingStatus.Pending),
       },
       // order: { createdAt: "DESC" },
     });
