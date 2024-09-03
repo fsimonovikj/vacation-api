@@ -46,6 +46,7 @@ export class UserController {
     return this.userService.update(user);
   }
 
+  @UseGuards(AuthGuard)
   @Put("deactivate")
   async deactivate(@Body() user: User): Promise<User> {
     return this.userService.deactivate(user);
