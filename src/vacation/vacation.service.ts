@@ -43,6 +43,15 @@ export class VacationService {
       .getMany();
   }
 
+  async findByPlanId(id: string): Promise<VacationDay[]> {
+    return await this.vacationRepository
+      .createQueryBuilder("vacation")
+      .where("vacation.planId = :id", { id })
+      .andWhere("vacation.deletedAt IS NULL")
+      .orderBy("vacation.createdAt", "ASC")
+      .getMany();
+  }
+
   async create(createVacationDto: CreateVacationDto) {
     const vacation = await this.vacationRepository.create({
       id: uuidV4(),

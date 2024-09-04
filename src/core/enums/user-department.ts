@@ -1,11 +1,16 @@
 export enum UserDepartment {
   Director = "director",
   CEO = "ceo",
+  CTO = "cto",
   HEAD = "head",
   Dev = "dev",
   HR = "hr",
   Finance = "finance",
   Marketing = "marketing",
   Sales = "sales",
+  Dispatch = "dispatch",
+  Optics = "optics",
+  Installation = "installation",
+  Defects = "defects",
   Other = "other",
 }

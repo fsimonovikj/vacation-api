@@ -39,29 +39,73 @@ export class VacationPlanService {
             const userVacations = await this.vacationService.findByUserId(
               user.id
             );
+
+            if (!userVacations || userVacations.length === 0) {
+              return null;
+            }
+
             const planVacation = userVacations.find(
               (v) => v.planId === plan.id
             );
 
-            console.log(`VACATION`, planVacation);
-            console.log(`USER VACATIONS`, userVacations);
+            if (!planVacation) {
+              return null;
+            }
+
             return {
               id: user.id,
-              vacationId: planVacation ? planVacation.id : null,
+              vacationId: planVacation.id,
               firstName: user.firstName,
               lastName: user.lastName,
-              remainingDays: planVacation ? planVacation.days : 0,
+              remainingDays: planVacation.days,
             };
           })
         );
+
+        // Filter out any null values from the details array
+        const filteredDetails = details.filter((detail) => detail !== null);
+
+        if (filteredDetails.length === 0) {
+          return null;
+        }
+
         return {
           ...plan,
-          details,
+          details: filteredDetails,
         };
       })
     );
 
-    return detailedPlans;
+    // Filter out any null values from the detailedPlans array
+    return detailedPlans.filter((plan) => plan !== null);
+  }
+
+  async findAvailableUsersForVacation(vacationId: string): Promise<any[]> {
+    const vacationPlan = await this.vacationPlanRepository.findOne({
+      where: {
+        id: vacationId,
+      },
+    });
+
+    if (!vacationPlan) {
+      throw new Error("Vacation plan not found");
+    }
+
+    const activeUsers = await this.userService.findUsersByCompanyId();
+
+    const existingVacations = await this.vacationService.findByPlanId(
+      vacationPlan.id
+    );
+
+    const availableUsers = activeUsers.filter((user) => {
+      const hasExistingPlan = existingVacations.some(
+        (vacation) => vacation.userId === user.id
+      );
+
+      return !hasExistingPlan;
+    });
+
+    return availableUsers;
   }
 
   async create(data: CreateVacationPlanDto) {
@@ -141,5 +185,46 @@ export class VacationPlanService {
     }
 
     return savedVacationPlan;
+  }
+
+  async addUsersToVacation(vacationId: string, userIds: string[]) {
+    const vacationPlan = await this.vacationPlanRepository.findOne({
+      where: {
+        id: vacationId,
+      },
+    });
+
+    if (!vacationPlan) {
+      throw new Error("Vacation plan not found");
+    }
+
+    const existingVacations = await this.vacationService.findByPlanId(
+      vacationPlan.id
+    );
+
+    const activeUsers = await this.userService.findUsersByCompanyId();
+
+    const usersToAdd = activeUsers.filter((user) => userIds.includes(user.id));
+
+    for (const user of usersToAdd) {
+      const hasExistingPlan = existingVacations.some(
+        (vacation) => vacation.userId === user.id
+      );
+
+      if (hasExistingPlan) {
+        continue;
+      }
+
+      await this.vacationService.create({
+        title: vacationPlan.title,
+        days: vacationPlan.days,
+        startAt: vacationPlan.start,
+        endAt: vacationPlan.end,
+        userId: user.id,
+        planId: vacationPlan.id,
+      });
+    }
+
+    return vacationPlan;
   }
 }
