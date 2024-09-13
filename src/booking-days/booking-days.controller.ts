@@ -23,6 +23,11 @@ export class BookingDaysController {
     return this.bookingService.findAll();
   }
 
+  @Get("leave-requests")
+  async findLeaveRequests(): Promise<BookingDay[]> {
+    return this.bookingService.findLeaveRequests();
+  }
+
   @Get(":id")
   async findOne(
     // @Res() res: Response,

@@ -29,6 +29,15 @@ export class BookingDaysService {
     });
   }
 
+  async findLeaveRequests(): Promise<BookingDay[]> {
+    return this.bookingRepository.find({
+      where: {
+        status: BookingStatus.Pending,
+      },
+      order: { createdAt: "DESC" },
+    });
+  }
+
   async create(createBookingDto: CreateBookingDto) {
     const vacation = await this.bookingRepository.create({
       id: createBookingDto.id,
