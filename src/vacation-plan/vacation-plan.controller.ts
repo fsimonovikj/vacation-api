@@ -14,28 +14,42 @@ export class VacationPlanController {
     return this.vacationPlanService.findAll();
   }
 
-  @Get("details")
-  async findVacationPlanWithUserDetails(): Promise<any[]> {
-    return this.vacationPlanService.findVacationPlanWithUserDetails();
+  @Get("details/:companyId")
+  async findVacationPlanWithUserDetails(
+    @Param("companyId") companyId: string
+  ): Promise<any[]> {
+    return this.vacationPlanService.findVacationPlanWithUserDetails(companyId);
   }
 
-  @Get("available-users/:vacationId")
+  @Get("available-users/:vacationId/:companyId")
   async findAvailableUsersForVacation(
-    @Param("vacationId") vacationId: string
+    @Param("vacationId") vacationId: string,
+    @Param("companyId") companyId: string
   ): Promise<User[]> {
-    return this.vacationPlanService.findAvailableUsersForVacation(vacationId);
+    return this.vacationPlanService.findAvailableUsersForVacation(
+      vacationId,
+      companyId
+    );
   }
 
-  @Post()
-  async create(@Body() data: VacationPlan): Promise<VacationPlan> {
-    return this.vacationPlanService.create(data);
+  @Post(":companyId")
+  async create(
+    @Body() data: VacationPlan,
+    @Param("companyId") companyId: string
+  ): Promise<VacationPlan> {
+    return this.vacationPlanService.create(data, companyId);
   }
 
-  @Post("add-users/:vacationId")
+  @Post("add-users/:vacationId/:companyId")
   async addUsersToVacation(
     @Param("vacationId") vacationId: string,
+    @Param("companyId") companyId: string,
     @Body() userIds: string[]
   ): Promise<VacationPlan> {
-    return this.vacationPlanService.addUsersToVacation(vacationId, userIds);
+    return this.vacationPlanService.addUsersToVacation(
+      vacationId,
+      userIds,
+      companyId
+    );
   }
 }

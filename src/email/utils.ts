@@ -14,6 +14,8 @@ import {
 } from "../core/messages";
 import { getLocalizedMessage } from "../core/utils/utils";
 import { recieverEmail, senderEmail, transporter } from "./configuration";
+// import emailjs from "emailjs-com";
+const emailjs = require("emailjs-com");
 
 interface IEmail {
   subject: string;

@@ -10,6 +10,7 @@ import { HolidayModule } from "./holidays/holidays.module";
 import { VacationModule } from "./vacation/vacation.module";
 import { VacationPlanModule } from "./vacation-plan/vacation-plan.module";
 import { ConfigModule } from "@nestjs/config";
+import { CompanyModule } from "./companies/company.module";
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ConfigModule } from "@nestjs/config";
     VacationPlanModule,
     PublicMethodsModule,
     HolidayModule,
+    CompanyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

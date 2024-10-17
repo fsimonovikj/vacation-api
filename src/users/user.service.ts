@@ -16,6 +16,7 @@ export class UserService {
       where: {
         deletedAt: null,
       },
+      relations: ["managedCompanies"],
       order: { createdAt: "ASC" },
     });
   }
@@ -26,6 +27,7 @@ export class UserService {
         email: email,
         deletedAt: null,
       },
+      relations: ["managedCompanies"],
     });
   }
 
@@ -35,6 +37,7 @@ export class UserService {
         id,
         deletedAt: null,
       },
+      relations: ["managedCompanies"],
     });
 
     return user;
@@ -46,6 +49,7 @@ export class UserService {
         id: id,
         deletedAt: null,
       },
+      relations: ["managedCompanies"],
     });
   }
 
@@ -88,10 +92,11 @@ export class UserService {
     await this.userRepository.delete(id);
   }
 
-  async findUsersByCompanyId(companyId?: string): Promise<User[]> {
+  async findUsersByCompanyId(companyId: string): Promise<User[]> {
     return await this.userRepository
       .createQueryBuilder("users")
-      // .where("users.companyId = :companyId", { companyId })
+      .leftJoinAndSelect("users.managedCompanies", "managedCompanies")
+      .where("users.companyId = :companyId", { companyId })
       .andWhere("users.deletedAt IS NULL OR users.deletedAt = :blank", {
         blank: "0000-00-00 00:00:00",
       })

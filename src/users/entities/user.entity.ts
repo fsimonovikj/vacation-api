@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,
+  ManyToMany,
 } from "typeorm";
 import { Exclude } from "class-transformer";
 import { UserStatus } from "../../core/enums/user-status.enum";
@@ -11,6 +12,7 @@ import { UserRole } from "../../core/enums/user-role.enum";
 import { BookingDay } from "../../booking-days/entities/booking-day.entity";
 import { BaseEntity } from "../../core/entities/base.entity";
 import { UserDepartment } from "../../core/enums/user-department";
+import { Company } from "../../companies/entities/company.entity";
 
 @Entity({ name: "users" })
 export class User extends BaseEntity {
@@ -55,4 +57,13 @@ export class User extends BaseEntity {
 
   @OneToMany(() => BookingDay, (booking) => booking.user)
   bookings: BookingDay[];
+
+  @Column({ type: "uuid", nullable: false })
+  companyId: string;
+
+  @ManyToOne(() => Company, (company) => company.users, { onDelete: "CASCADE" })
+  company: Company;
+
+  @ManyToMany(() => Company, (company) => company.managers)
+  managedCompanies: Company[];
 }

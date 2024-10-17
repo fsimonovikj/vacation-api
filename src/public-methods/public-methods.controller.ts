@@ -194,18 +194,18 @@ export class PublicMethodsController {
     }
   }
 
-  @UseGuards(AuthGuard)
-  @Post("/vacation-plan")
-  async createVacationPlan(
-    @Body() req: CreateVacationPlanDto,
-    @Res() res: Response
-  ) {
-    try {
-      const plan = await this.vacationPlanService.create(req);
+  // @UseGuards(AuthGuard)
+  // @Post("/vacation-plan")
+  // async createVacationPlan(
+  //   @Body() req: CreateVacationPlanDto,
+  //   @Res() res: Response
+  // ) {
+  //   try {
+  //     const plan = await this.vacationPlanService.create(req);
 
-      return res.status(200).send(plan);
-    } catch (error) {
-      return res.status(500).send(error.message);
-    }
-  }
+  //     return res.status(200).send(plan);
+  //   } catch (error) {
+  //     return res.status(500).send(error.message);
+  //   }
+  // }
 }

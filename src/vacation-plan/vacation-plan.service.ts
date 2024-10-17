@@ -24,7 +24,7 @@ export class VacationPlanService {
     });
   }
 
-  async findVacationPlanWithUserDetails(): Promise<any[]> {
+  async findVacationPlanWithUserDetails(companyId: string): Promise<any[]> {
     const vacationPlans = await this.vacationPlanRepository.find({
       order: {
         createdAt: "DESC",
@@ -33,7 +33,7 @@ export class VacationPlanService {
 
     const detailedPlans = await Promise.all(
       vacationPlans.map(async (plan) => {
-        const users = await this.userService.findUsersByCompanyId();
+        const users = await this.userService.findUsersByCompanyId(companyId);
         const details = await Promise.all(
           users.map(async (user) => {
             const userVacations = await this.vacationService.findByUserId(
@@ -80,7 +80,10 @@ export class VacationPlanService {
     return detailedPlans.filter((plan) => plan !== null);
   }
 
-  async findAvailableUsersForVacation(vacationId: string): Promise<any[]> {
+  async findAvailableUsersForVacation(
+    vacationId: string,
+    companyId: string
+  ): Promise<any[]> {
     const vacationPlan = await this.vacationPlanRepository.findOne({
       where: {
         id: vacationId,
@@ -91,7 +94,7 @@ export class VacationPlanService {
       throw new Error("Vacation plan not found");
     }
 
-    const activeUsers = await this.userService.findUsersByCompanyId();
+    const activeUsers = await this.userService.findUsersByCompanyId(companyId);
 
     const existingVacations = await this.vacationService.findByPlanId(
       vacationPlan.id
@@ -108,7 +111,7 @@ export class VacationPlanService {
     return availableUsers;
   }
 
-  async create(data: CreateVacationPlanDto) {
+  async create(data: CreateVacationPlanDto, companyId: string) {
     const plan = await this.vacationPlanRepository.create(data);
 
     const hasOverlappingPlan = await this.vacationPlanRepository.findOne({
@@ -135,7 +138,7 @@ export class VacationPlanService {
 
     const savedVacationPlan = await this.vacationPlanRepository.save(plan);
 
-    const activeUsers = await this.userService.findUsersByCompanyId();
+    const activeUsers = await this.userService.findUsersByCompanyId(companyId);
 
     for (const user of activeUsers) {
       const existingVacations = await this.vacationService.findByUserId(
@@ -187,7 +190,11 @@ export class VacationPlanService {
     return savedVacationPlan;
   }
 
-  async addUsersToVacation(vacationId: string, userIds: string[]) {
+  async addUsersToVacation(
+    vacationId: string,
+    userIds: string[],
+    companyId: string
+  ) {
     const vacationPlan = await this.vacationPlanRepository.findOne({
       where: {
         id: vacationId,
@@ -202,7 +209,7 @@ export class VacationPlanService {
       vacationPlan.id
     );
 
-    const activeUsers = await this.userService.findUsersByCompanyId();
+    const activeUsers = await this.userService.findUsersByCompanyId(companyId);
 
     const usersToAdd = activeUsers.filter((user) => userIds.includes(user.id));
 
