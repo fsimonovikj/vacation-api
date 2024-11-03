@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   UseGuards,
+  Patch,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { User } from "./entities/user.entity";
@@ -41,8 +42,9 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Put()
-  async update(@Body() user: User): Promise<User> {
+  @Patch()
+  async update(@Body() user: any): Promise<User> {
+    console.log(`UPDATE USER`, user);
     return this.userService.update(user);
   }
 

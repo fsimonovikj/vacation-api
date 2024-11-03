@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./entities/user.entity";
 import { Repository } from "typeorm";
@@ -57,14 +57,32 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async update(user: User): Promise<User> {
-    await this.userRepository.update(user.id, user);
-    return this.userRepository.findOne({
-      where: {
-        id: user.id,
-        deletedAt: null,
-      },
-    });
+  async update(user: any): Promise<any> {
+    if (user.currentPassword && user.newPassword) {
+      const regexPassword = new RegExp(
+        "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})"
+      );
+      if (user.currentPassword !== user.password) {
+        throw new HttpException(
+          "Current password is incorrect",
+          HttpStatus.BAD_REQUEST
+        );
+      }
+
+      if (!regexPassword.test(user.newPassword)) {
+        throw new HttpException(
+          "Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character",
+          HttpStatus.BAD_REQUEST
+        );
+      }
+
+      if (user.newPassword && user.currentPassword === user.password) {
+        user.password = user.newPassword;
+      }
+    }
+
+    const updatedUser = await this.userRepository.save(user);
+    return updatedUser;
   }
 
   async deactivate(user: User): Promise<User> {
