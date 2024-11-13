@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
 
 export const senderEmail = "request.booking.vacation@gmail.com";
-// export const recieverEmail = "filip@k.net.mk, bosko@k.net.mk, oliver@k.net.mk";
 export const recieverEmail = "filip@k.net.mk";
 
 export const transporter = nodemailer.createTransport({
