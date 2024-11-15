@@ -13,6 +13,7 @@ import { BookingDay } from "../../booking-days/entities/booking-day.entity";
 import { BaseEntity } from "../../core/entities/base.entity";
 import { UserDepartment } from "../../core/enums/user-department";
 import { Company } from "../../companies/entities/company.entity";
+import { VacationType } from "../../vacation/types/vacation-type";
 
 @Entity({ name: "users" })
 export class User extends BaseEntity {
@@ -66,4 +67,12 @@ export class User extends BaseEntity {
 
   @ManyToMany(() => Company, (company) => company.managers)
   managedCompanies: Company[];
+
+  @Column({
+    type: "enum",
+    enum: VacationType,
+    default: VacationType.MACEDONIA,
+    nullable: false,
+  })
+  type: VacationType;
 }

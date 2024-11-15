@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../../core/entities/base.entity";
 import { User } from "../../users/entities/user.entity";
 import { VacationPlan } from "../../vacation-plan/entities/vacation-plan.entity";
+import { VacationType } from "../types/vacation-type";
 
 @Entity({ name: "vacation" })
 export class VacationDay extends BaseEntity {
@@ -34,6 +35,14 @@ export class VacationDay extends BaseEntity {
 
   @ManyToOne(() => VacationPlan, (plan) => plan.vacations)
   plan: VacationPlan;
+
+  @Column({
+    type: "enum",
+    enum: VacationType,
+    nullable: false,
+    default: VacationType.MACEDONIA,
+  })
+  type: VacationType;
 
   getUserId(): string {
     return this.user.id;

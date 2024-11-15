@@ -58,6 +58,7 @@ export class VacationPlanService {
               firstName: user.firstName,
               lastName: user.lastName,
               remainingDays: planVacation.days,
+              type: user.type,
             };
           })
         );
@@ -94,7 +95,10 @@ export class VacationPlanService {
       throw new Error("Vacation plan not found");
     }
 
-    const activeUsers = await this.userService.findUsersByCompanyId(companyId);
+    const activeUsers = await this.userService.findUserByCompanyWithLocation(
+      companyId,
+      vacationPlan.type
+    );
 
     const existingVacations = await this.vacationService.findByPlanId(
       vacationPlan.id
@@ -138,7 +142,10 @@ export class VacationPlanService {
 
     const savedVacationPlan = await this.vacationPlanRepository.save(plan);
 
-    const activeUsers = await this.userService.findUsersByCompanyId(companyId);
+    const activeUsers = await this.userService.findUserByCompanyWithLocation(
+      companyId,
+      savedVacationPlan.type
+    );
 
     for (const user of activeUsers) {
       const existingVacations = await this.vacationService.findByUserId(
@@ -183,6 +190,7 @@ export class VacationPlanService {
           endAt: savedVacationPlan.end,
           userId: user.id,
           planId: savedVacationPlan.id,
+          type: user.type,
         });
       }
     }
@@ -229,6 +237,7 @@ export class VacationPlanService {
         endAt: vacationPlan.end,
         userId: user.id,
         planId: vacationPlan.id,
+        type: user.type,
       });
     }
 

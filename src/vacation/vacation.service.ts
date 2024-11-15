@@ -61,6 +61,7 @@ export class VacationService {
       endAt: createVacationDto.endAt,
       userId: createVacationDto.userId,
       planId: createVacationDto.planId,
+      type: createVacationDto.type,
     });
 
     const savedVacation = await this.vacationRepository.save(vacation);

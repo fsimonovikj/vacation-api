@@ -1,4 +1,5 @@
 import { IsNotEmpty } from "class-validator";
+import { VacationType } from "../../vacation/types/vacation-type";
 
 export class CreateVacationPlanDto {
   @IsNotEmpty()
@@ -15,4 +16,7 @@ export class CreateVacationPlanDto {
 
   @IsNotEmpty()
   days: number;
+
+  @IsNotEmpty()
+  type: VacationType;
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./entities/user.entity";
 import { Repository } from "typeorm";
 import { UserStatus } from "../core/enums/user-status.enum";
+import { VacationType } from "../vacation/types/vacation-type";
 
 @Injectable()
 export class UserService {
@@ -88,22 +89,32 @@ export class UserService {
   async deactivate(user: User): Promise<User> {
     const [username, domain] = user.email.split("@");
 
-    const timestamp = new Date().getTime();
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const newEmail = `${username}-${timestamp}@${domain}`;
-    await this.userRepository.update(user.id, {
-      ...user,
+
+    // Prepare updated fields
+    const updatedFields = {
       deletedAt: new Date(),
-      firstName: `${user.firstName}-${new Date().getTime()}`,
-      lastName: `${user.lastName}-${new Date().getTime()}`,
+      firstName: `${user.firstName}-${timestamp}`,
+      lastName: `${user.lastName}-${timestamp}`,
       email: newEmail,
-      password: null,
+      password: null, // Ensure the password column is nullable
       status: UserStatus.Deactivated,
+    };
+
+    // Update the user record in the database
+    await this.userRepository.update(user.id, updatedFields);
+
+    // Fetch the updated user
+    const updatedUser = await this.userRepository.findOne({
+      where: { id: user.id },
     });
-    return this.userRepository.findOne({
-      where: {
-        id: user.id,
-      },
-    });
+
+    if (!updatedUser) {
+      throw new Error("Failed to fetch the updated user");
+    }
+
+    return updatedUser;
   }
 
   async remove(id: number): Promise<void> {
@@ -115,6 +126,22 @@ export class UserService {
       .createQueryBuilder("users")
       .leftJoinAndSelect("users.managedCompanies", "managedCompanies")
       .where("users.companyId = :companyId", { companyId })
+      .andWhere("users.deletedAt IS NULL OR users.deletedAt = :blank", {
+        blank: "0000-00-00 00:00:00",
+      })
+      .andWhere("users.status IN (:...statuses)", {
+        statuses: ["active", "pending"],
+      })
+      .orderBy("users.createdAt", "ASC")
+      .getMany();
+  }
+
+  async findUserByCompanyWithLocation(companyId: string, type: VacationType) {
+    return await this.userRepository
+      .createQueryBuilder("users")
+      .leftJoinAndSelect("users.company", "company")
+      .where("users.companyId = :companyId", { companyId })
+      .andWhere("users.type = :type", { type })
       .andWhere("users.deletedAt IS NULL OR users.deletedAt = :blank", {
         blank: "0000-00-00 00:00:00",
       })
