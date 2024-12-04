@@ -12,6 +12,7 @@
         "start": "ts-node src/main.ts",
         "local": "cross-env VACATION_ENVIRONMENT=local nest start",
         "production:knet": "cross-env VACATION_ENVIRONMENT=production API_BASE_URL_PROD=http://api.odmor.k.net.mk WEB_BASE_URL_PROD=http://odmor.k.net.mk  nest start",
+        "production:mozok": "cross-env VACATION_ENVIRONMENT=production API_BASE_URL_PROD=http://odmor.mozok.de/api WEB_BASE_URL_PROD=http://odmor.mozok.de  nest start",
         "production": "cross-env VACATION_ENVIRONMENT=production nest start",
         "dev": "npm run start:dev",
         "start:dev": "nest start --watch",
