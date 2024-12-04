@@ -11,12 +11,12 @@ interface AdminWebConfig {
   };
 }
 
-let env: any = process.env.VACATION_ENVIRONMENT ?? "local";
+let env: any = process.env.VACATION_ENVIRONMENT ?? "development";
 
 let apiConfig: AdminWebConfig;
 
 switch (env) {
-  case "local":
+  case "development":
     apiConfig = {
       apiBaseUrl: "http://localhost:3000",
       webBaseUrl: "http://localhost:4000",
