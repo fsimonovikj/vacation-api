@@ -123,14 +123,17 @@ export class VacationPlanService {
         {
           start: LessThanOrEqual(plan.start),
           end: MoreThanOrEqual(plan.start),
+          type: plan.type,
         },
         {
           start: LessThanOrEqual(plan.end),
           end: MoreThanOrEqual(plan.end),
+          type: plan.type,
         },
         {
           start: MoreThanOrEqual(plan.start),
           end: LessThanOrEqual(plan.end),
+          type: plan.type,
         },
       ],
     });
