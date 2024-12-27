@@ -5,11 +5,15 @@ import { VacationDay } from "./entities/vacation.entity";
 import { CreateVacationDto } from "./dto/create-vacation.dto";
 import { UpdateVacationDto } from "./dto/update-vacation.dto";
 import { v4 as uuidV4 } from "uuid";
+import { LeaveDocumentationService } from "../leave-documentation/leave_documentation.service";
+import { UserService } from "../users/user.service";
 @Injectable()
 export class VacationService {
   constructor(
     @InjectRepository(VacationDay)
-    private readonly vacationRepository: Repository<VacationDay>
+    private readonly vacationRepository: Repository<VacationDay>,
+    private readonly leaveDocumentationService: LeaveDocumentationService,
+    private readonly userService: UserService
   ) {}
 
   async findAll(): Promise<VacationDay[]> {
@@ -65,6 +69,23 @@ export class VacationService {
     });
 
     const savedVacation = await this.vacationRepository.save(vacation);
+    console.log(`SAVED VACATION`, savedVacation);
+    const user = await this.userService.findUserById(savedVacation.userId);
+    console.log(`USER `, user);
+
+    await this.leaveDocumentationService.createLeaveDocumentation({
+      id: uuidV4(),
+      title: savedVacation.title,
+      days: savedVacation.days,
+      startAt: savedVacation.startAt,
+      endAt: savedVacation.endAt,
+      userId: savedVacation.userId,
+      user: user,
+      vacation: savedVacation,
+      type: savedVacation.type,
+      legalObligation: "Description in the document",
+    });
+
     return savedVacation;
   }
 

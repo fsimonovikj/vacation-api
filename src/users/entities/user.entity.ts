@@ -14,6 +14,7 @@ import { BaseEntity } from "../../core/entities/base.entity";
 import { UserDepartment } from "../../core/enums/user-department";
 import { Company } from "../../companies/entities/company.entity";
 import { VacationType } from "../../vacation/types/vacation-type";
+import { LeaveDocumentation } from "../../leave-documentation/entities/leave_documentation.entity";
 
 @Entity({ name: "users" })
 export class User extends BaseEntity {
@@ -67,6 +68,9 @@ export class User extends BaseEntity {
 
   @ManyToMany(() => Company, (company) => company.managers)
   managedCompanies: Company[];
+
+  @OneToMany(() => LeaveDocumentation, (decision) => decision.user)
+  vacationDecisions: LeaveDocumentation[];
 
   @Column({
     type: "enum",

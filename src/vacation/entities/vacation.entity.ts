@@ -3,6 +3,7 @@ import { BaseEntity } from "../../core/entities/base.entity";
 import { User } from "../../users/entities/user.entity";
 import { VacationPlan } from "../../vacation-plan/entities/vacation-plan.entity";
 import { VacationType } from "../types/vacation-type";
+import { LeaveDocumentation } from "../../leave-documentation/entities/leave_documentation.entity";
 
 @Entity({ name: "vacation" })
 export class VacationDay extends BaseEntity {
@@ -35,6 +36,9 @@ export class VacationDay extends BaseEntity {
 
   @ManyToOne(() => VacationPlan, (plan) => plan.vacations)
   plan: VacationPlan;
+
+  @OneToMany(() => LeaveDocumentation, (decision) => decision.vacation)
+  vacationDecisions: LeaveDocumentation[];
 
   @Column({
     type: "enum",
