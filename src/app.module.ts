@@ -11,6 +11,7 @@ import { VacationModule } from "./vacation/vacation.module";
 import { VacationPlanModule } from "./vacation-plan/vacation-plan.module";
 import { ConfigModule } from "@nestjs/config";
 import { CompanyModule } from "./companies/company.module";
+import { HealthCareModule } from "./health-care/health-care.module";
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CompanyModule } from "./companies/company.module";
     PublicMethodsModule,
     HolidayModule,
     CompanyModule,
+    HealthCareModule,
   ],
   controllers: [AppController],
   providers: [AppService],

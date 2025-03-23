@@ -10,7 +10,7 @@
         "build": "nest build",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "ts-node src/main.ts",
-        "local": "cross-env VACATION_ENVIRONMENT=local nest start",
+        "local": "cross-env VACATION_ENVIRONMENT=local npm run start:dev",
         "production:knet": "cross-env VACATION_ENVIRONMENT=production API_BASE_URL_PROD=http://api.odmor.k.net.mk WEB_BASE_URL_PROD=http://odmor.k.net.mk  nest start",
         "production:mozok": "cross-env VACATION_ENVIRONMENT=production API_BASE_URL_PROD=http://odmor.mozok.de/api WEB_BASE_URL_PROD=http://odmor.mozok.de  nest start",
         "production": "cross-env VACATION_ENVIRONMENT=production nest start",

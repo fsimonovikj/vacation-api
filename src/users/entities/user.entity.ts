@@ -14,6 +14,7 @@ import { BaseEntity } from "../../core/entities/base.entity";
 import { UserDepartment } from "../../core/enums/user-department";
 import { Company } from "../../companies/entities/company.entity";
 import { VacationType } from "../../vacation/types/vacation-type";
+import { HealthCare } from "../../health-care/entities/health-care.entity";
 
 @Entity({ name: "users" })
 export class User extends BaseEntity {
@@ -75,4 +76,7 @@ export class User extends BaseEntity {
     nullable: false,
   })
   type: VacationType;
+
+  @OneToMany(() => HealthCare, (healthCares) => healthCares.user)
+  healthCares: HealthCare[];
 }
