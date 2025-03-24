@@ -35,9 +35,12 @@ export class HealthCareController {
         throw new Error("User not found");
       }
 
-      const response = await axios.post(apiConfig.analyzerBaseUrl, {
-        text: conversation,
-      });
+      const response = await axios.post(
+        `${apiConfig.analyzerBaseUrl}/analyze`,
+        {
+          conversation,
+        }
+      );
 
       const sentiment = response.data;
 
