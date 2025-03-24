@@ -1,6 +1,7 @@
 interface AdminWebConfig {
   apiBaseUrl: string;
   webBaseUrl: string;
+  analyzerBaseUrl: string;
   database?: {
     type: string;
     host: string;
@@ -20,10 +21,11 @@ switch (env) {
     apiConfig = {
       apiBaseUrl: "http://localhost:3000",
       webBaseUrl: "http://localhost:4000",
+      analyzerBaseUrl: "http://localhost:9000",
       database: {
-        type: "mysql",
+        type: "postgres",
         host: process.env.DATABASE_HOST_LOCAL,
-        port: 3306,
+        port: 5432,
         username: process.env.DATABASE_USER_LOCAL,
         password: process.env.DATABASE_PASSWORD_LOCAL,
         name: process.env.DATABASE_NAME_LOCAL,
@@ -34,10 +36,11 @@ switch (env) {
     apiConfig = {
       apiBaseUrl: "http://localhost:3000",
       webBaseUrl: "http://localhost:4000",
+      analyzerBaseUrl: "http://localhost:9000",
       database: {
-        type: "mysql",
+        type: "postgres",
         host: process.env.DATABASE_HOST_LOCAL,
-        port: 3306,
+        port: 5432,
         username: process.env.DATABASE_USER_LOCAL,
         password: process.env.DATABASE_PASSWORD_LOCAL,
         name: process.env.DATABASE_NAME_LOCAL,
@@ -48,10 +51,11 @@ switch (env) {
     apiConfig = {
       apiBaseUrl: process.env.API_BASE_URL_PROD,
       webBaseUrl: process.env.WEB_BASE_URL_PROD,
+      analyzerBaseUrl: process.env.ANALYZER_BASE_URL_PROD,
       database: {
-        type: "mysql",
+        type: "postgres",
         host: process.env.DATABASE_HOST_PROD,
-        port: 3306,
+        port: 5432,
         username: process.env.DATABASE_USER_PROD,
         password: process.env.DATABASE_PASSWORD_PROD,
         name: process.env.DATABASE_NAME_PROD,
@@ -62,6 +66,7 @@ switch (env) {
     apiConfig = {
       apiBaseUrl: "http://localhost:3000",
       webBaseUrl: "http://localhost:4000",
+      analyzerBaseUrl: "http://localhost:9000",
     };
 }
 

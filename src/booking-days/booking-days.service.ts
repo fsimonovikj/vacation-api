@@ -81,7 +81,7 @@ export class BookingDaysService {
   }
 
   async rejectBookingRequest(bookingId: string) {
-    // TODO: send meil to the user with the rejected request
+    // TODO: send emeil to the user with the rejected request
     const booking = await this.bookingRepository.findOneOrFail({
       where: { id: bookingId },
     });

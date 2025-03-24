@@ -4,6 +4,7 @@ import { v4 as uuidV4 } from "uuid";
 import { UserService } from "../users/user.service";
 import axios from "axios";
 import { HealthCare } from "./entities/health-care.entity";
+import apiConfig from "../config/configurations";
 
 @Controller("health-care")
 export class HealthCareController {
@@ -34,9 +35,7 @@ export class HealthCareController {
         throw new Error("User not found");
       }
 
-      // TODO: modified this and create correct for the python server
-      const url = "http://localhost:9000/analyze";
-      const response = await axios.post(url, {
+      const response = await axios.post(apiConfig.analyzerBaseUrl, {
         text: conversation,
       });
 

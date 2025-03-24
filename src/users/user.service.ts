@@ -122,33 +122,27 @@ export class UserService {
   }
 
   async findUsersByCompanyId(companyId: string): Promise<User[]> {
-    return await this.userRepository
-      .createQueryBuilder("users")
-      .leftJoinAndSelect("users.managedCompanies", "managedCompanies")
-      .where("users.companyId = :companyId", { companyId })
-      .andWhere("users.deletedAt IS NULL OR users.deletedAt = :blank", {
-        blank: "0000-00-00 00:00:00",
-      })
-      .andWhere("users.status IN (:...statuses)", {
-        statuses: ["active", "pending"],
-      })
-      .orderBy("users.createdAt", "ASC")
-      .getMany();
+    return await this.userRepository.find({
+      where: {
+        companyId,
+        deletedAt: null,
+        status: UserStatus.Active,
+      },
+      relations: ["managedCompanies"],
+      order: { createdAt: "ASC" },
+    });
   }
 
   async findUserByCompanyWithLocation(companyId: string, type: VacationType) {
-    return await this.userRepository
-      .createQueryBuilder("users")
-      .leftJoinAndSelect("users.company", "company")
-      .where("users.companyId = :companyId", { companyId })
-      .andWhere("users.type = :type", { type })
-      .andWhere("users.deletedAt IS NULL OR users.deletedAt = :blank", {
-        blank: "0000-00-00 00:00:00",
-      })
-      .andWhere("users.status IN (:...statuses)", {
-        statuses: ["active", "pending"],
-      })
-      .orderBy("users.createdAt", "ASC")
-      .getMany();
+    return await this.userRepository.find({
+      where: {
+        companyId,
+        type,
+        deletedAt: null,
+        status: UserStatus.Active,
+      },
+      relations: ["managedCompanies"],
+      order: { createdAt: "ASC" },
+    });
   }
 }

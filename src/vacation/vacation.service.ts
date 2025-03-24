@@ -35,21 +35,17 @@ export class VacationService {
   }
 
   async findByUserId(id: string): Promise<VacationDay[]> {
-    return await this.vacationRepository
-      .createQueryBuilder("vacation")
-      .where("vacation.userId = :id", { id })
-      .andWhere("vacation.deletedAt IS NULL")
-      .orderBy("vacation.createdAt", "ASC")
-      .getMany();
+    return await this.vacationRepository.find({
+      where: { userId: id, deletedAt: null },
+      order: { createdAt: "ASC" },
+    });
   }
 
   async findByPlanId(id: string): Promise<VacationDay[]> {
-    return await this.vacationRepository
-      .createQueryBuilder("vacation")
-      .where("vacation.planId = :id", { id })
-      .andWhere("vacation.deletedAt IS NULL")
-      .orderBy("vacation.createdAt", "ASC")
-      .getMany();
+    return await this.vacationRepository.find({
+      where: { planId: id, deletedAt: null },
+      order: { createdAt: "ASC" },
+    });
   }
 
   async create(createVacationDto: CreateVacationDto) {
@@ -99,12 +95,10 @@ export class VacationService {
   }
 
   async findVacationByDate(userId: string, date: Date) {
-    const vacation = await this.vacationRepository
-      .createQueryBuilder("vacation")
-      .where("vacation.userId = :userId", { userId })
-      .andWhere("vacation.deletedAt IS NULL")
-      .orderBy("vacation.createdAt", "ASC")
-      .getMany();
+    const vacation = await this.vacationRepository.find({
+      where: { userId: userId, deletedAt: null },
+      order: { createdAt: "ASC" },
+    });
 
     const filteredVacation = vacation.filter((vacation) => {
       if (vacation.startAt <= date && vacation.endAt >= date) {
